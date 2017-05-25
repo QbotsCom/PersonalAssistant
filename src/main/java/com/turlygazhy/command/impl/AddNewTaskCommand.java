@@ -4,7 +4,6 @@ import com.turlygazhy.Bot;
 import com.turlygazhy.command.Command;
 import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.entity.WaitingType;
-import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -14,8 +13,7 @@ import java.sql.SQLException;
 
 
 public class AddNewTaskCommand extends Command {
-    WaitingType waitingType;
-    String taskText;
+    String taskText;//todo создай объект Task
     String deadline;
     Long taskWorker;
     private final String SELECT_FROM_USER = "SELECT * FROM USER";
@@ -23,17 +21,14 @@ public class AddNewTaskCommand extends Command {
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
-        Message updateMessage = update.getMessage();
-        String updateMessageText = updateMessage.getText();
-        Long chatId = updateMessage.getChatId();
-
-        if (waitingType == null){
+        initMessage(update, bot);
+        if (waitingType == null) {
             sendMessage(76, chatId, bot);
             waitingType = WaitingType.TASK_TEXT;
             return false;
         }
 
-        switch (waitingType){
+        switch (waitingType) {
             case TASK_TEXT:
                 taskText = updateMessageText;
                 sendMessage(77, chatId, bot);
@@ -48,7 +43,7 @@ public class AddNewTaskCommand extends Command {
                 ResultSet rs = ps.getResultSet();
                 rs.next();
                 StringBuilder sb = new StringBuilder();
-                while (!rs.isAfterLast()){
+                while (!rs.isAfterLast()) {
                     sb.append("/id");
                     sb.append(rs.getInt("ID"));
                     sb.append(" ").append(rs.getString("NAME")).append("\n");
@@ -76,7 +71,6 @@ public class AddNewTaskCommand extends Command {
                 sendMessage(80, rs.getLong("CHAT_ID"), bot);
                 return true;
         }
-
         return false;
     }
 }
