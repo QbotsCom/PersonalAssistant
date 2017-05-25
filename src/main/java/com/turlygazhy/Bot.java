@@ -1,9 +1,5 @@
 package com.turlygazhy;
 
-import com.turlygazhy.command.impl.WorkWithGroupCommand;
-import com.turlygazhy.dao.DaoFactory;
-import com.turlygazhy.dao.impl.KeyWordDao;
-import com.turlygazhy.dao.impl.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.objects.Message;
@@ -32,11 +28,6 @@ public class Bot extends TelegramLongPollingBot {
         }
         Long chatId = updateMessage.getChatId();
         if (chatId < 0) {
-            try {
-                handleGroupUpdate(update);
-            } catch (SQLException | TelegramApiException e) {
-                e.printStackTrace();
-            }
             return;
         }
         Conversation conversation = getConversation(update);
@@ -60,11 +51,6 @@ public class Bot extends TelegramLongPollingBot {
             conversations.put(chatId, conversation);
         }
         return conversation;
-    }
-
-
-    private void handleGroupUpdate(Update update) throws SQLException, TelegramApiException {
-        new WorkWithGroupCommand().execute(update, this);
     }
 
     public String getBotUsername() {
