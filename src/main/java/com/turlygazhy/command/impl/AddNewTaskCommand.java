@@ -39,7 +39,7 @@ public class AddNewTaskCommand extends Command {
 
             case TASK_DEADLINE:
 
-                task.setDeadline(DateUtil.parseString(updateMessageText));
+                task.setDeadline(updateMessageText);
 
                 sendMessage(78, chatId, bot);
 

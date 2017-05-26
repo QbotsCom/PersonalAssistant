@@ -9,12 +9,12 @@ import java.util.Date;
 public class Task {
     private int id;
     private String text;
-    private Date deadline;
+    private String deadline;
     private Long userId;
     private Long addedByUserId;
     private Status status;
 
-    private enum Status {
+    public enum Status {
         DOING(0),
         DONE(1),
         WAITING_FOR_CONFIRMATION(2),
@@ -31,11 +31,14 @@ public class Task {
         }
     };
 
-    public Task(Long userId) {
+    public Task() {
+    }
+
+    public Task(int id) {
         this.id = id;
-        this.text = text;
-        this.deadline = deadline;
-        this.userId = userId;
+    }
+
+    public Task(Long addedByUserId) {
         this.addedByUserId = addedByUserId;
     }
 
@@ -51,11 +54,11 @@ public class Task {
         this.text = text;
     }
 
-    public Date getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
@@ -71,14 +74,34 @@ public class Task {
         return addedByUserId;
     }
 
+    public void setAddedByUserId(long addedByUserId) {
+        this.addedByUserId = addedByUserId;
+    }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(int status) {
+        for (Status type : Status.values()){
+            if (type.getId() == status){
+                this.status = type;
+                return;
+            }
+        }
+    }
+
+    public void setStatus(Status status){
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.text).append("\n")
+                .append(deadline).append("\n")
+                .append(status).append("\n");
 
+        return sb.toString();
+    }
 }

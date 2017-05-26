@@ -14,8 +14,11 @@ import java.util.Objects;
 public class UserDao {
     private static final String SELECT_USER_CHAT_ID = "SELECT * FROM PUBLIC.USER WHERE ID=?";
     private static final String SELECT_FROM_USER = "SELECT * FROM USER";
+    private static final String SELECT_FROM_USER_BY_CHAT_ID = "SELECT * FROM USER WHERE CHAT_ID = ?";
     private static final int PARAMETER_USER_ID = 1;
+    private static final int PARAMETER_CHAT_ID = 1;
     private static final int CHAT_ID_COLUMN_INDEX = 2;
+    private static final int USER_ID_COLUMN_INDEX = 1;
     public static final int ADMIN_ID = 2;
     private Connection connection;
 
@@ -40,18 +43,24 @@ public class UserDao {
         return Objects.equals(chatId, getAdminChatId());
     }
 
-    public Long getChatIdByUserId(Long id){
-        try {
-            PreparedStatement ps = connection.prepareStatement(SELECT_USER_CHAT_ID);
-            ps.setLong(PARAMETER_USER_ID, id);
-            ps.execute();
-            ResultSet rs = ps.getResultSet();
-            rs.next();
-            return rs.getLong(CHAT_ID_COLUMN_INDEX);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public Long getChatIdByUserId(Long id) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(SELECT_USER_CHAT_ID);
+        ps.setLong(PARAMETER_USER_ID, id);
+        ps.execute();
+        ResultSet rs = ps.getResultSet();
+        rs.next();
+        return rs.getLong(CHAT_ID_COLUMN_INDEX);
     }
+
+    public Long getUserIdByChatId(Long chatId) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(SELECT_FROM_USER_BY_CHAT_ID);
+        ps.setLong(PARAMETER_CHAT_ID, chatId);
+        ps.execute();
+        ResultSet rs = ps.getResultSet();
+        rs.next();
+        return rs.getLong(USER_ID_COLUMN_INDEX);
+    }
+
     public ResultSet getUsers() throws SQLException {
         PreparedStatement ps = ConnectionPool.getConnection().prepareStatement(SELECT_FROM_USER);
         ps.execute();

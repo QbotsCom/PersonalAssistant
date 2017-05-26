@@ -2,6 +2,7 @@ package com.turlygazhy.command;
 
 import com.turlygazhy.command.impl.AddNewTaskCommand;
 import com.turlygazhy.command.impl.ShowTasksCommand;
+import com.turlygazhy.command.impl.StartCommand;
 import com.turlygazhy.exception.NotRealizedMethodException;
 
 /**
@@ -15,6 +16,8 @@ public class CommandFactory {
                 return new AddNewTaskCommand();
             case SHOW_TASKS:
                 return new ShowTasksCommand();
+            case START:
+                return new StartCommand();
             default:
                 throw new NotRealizedMethodException("Not realized for type: " + type);
         }

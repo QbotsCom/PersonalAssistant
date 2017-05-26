@@ -3,8 +3,8 @@ package com.turlygazhy.command.impl;
 import com.turlygazhy.Bot;
 import com.turlygazhy.command.Command;
 import com.turlygazhy.connection_pool.ConnectionPool;
+import com.turlygazhy.entity.Task;
 import com.turlygazhy.entity.WaitingType;
-import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -19,128 +19,98 @@ import java.util.ArrayList;
  */
 public class ShowTasksCommand extends Command {
     WaitingType waitingType;
-    Connection connection = ConnectionPool.getConnection();
     Long userId;
-    ResultSet rs;
-    ArrayList<String> undoneTasks;
-    ArrayList<Integer> undoneTasksId = new ArrayList<>();
-    int taskNumber = 0;
-    private final String SELECT_UNDONE_TASKS = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS = 2";
-    private final String SELECT_USER = "SELECT * FROM USER WHERE CHAT_ID = ?";
+
+    ArrayList<Task> tasks;
+    Task task;
+    int taskIndex = 0;
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
-        Message updateMessage = update.getMessage();
-        String updateMessageText = updateMessage.getText();
-        Long chatId = updateMessage.getChatId();
+        initMessage(update, bot);
 
-        if (waitingType == null){
+        if (waitingType == null) {
 
-            userId = getUserId(chatId);
-            rs = getTasks(userId);
+            userId = userDao.getUserIdByChatId(chatId);
+            tasks = taskDao.getTasks(userId);
+            task = tasks.get(taskIndex);
 
-            if (rs == null){
+            if (tasks == null) {
                 sendMessage(82, chatId, bot);
                 return true;
             }
-            undoneTasks = getUndoneTasks();
+
             sendMessage(81, chatId, bot);
-            sendMessage(undoneTasks.get(taskNumber), chatId, bot);
-
+            sendMessage(task.toString(), chatId, bot);
             waitingType = WaitingType.COMMAND;
-
             return false;
         }
 
-        if(undoneTasks.size() == taskNumber){
+        if (tasks.size() == taskIndex) {
             sendMessage(82, chatId, bot);
             return true;
         }
 
-        switch (waitingType){
+        switch (waitingType) {
             case COMMAND:
-                PreparedStatement ps;
-
+                // Accept
                 if (updateMessageText.equals(buttonDao.getButtonText(51))) {
-                    ps = connection.prepareStatement("UPDATE TASK SET STATUS = ? WHERE ID = ?");
-                    ps.setInt(1, 0);
-                    ps.setLong(2, undoneTasksId.get(taskNumber));
-                    ps.execute();
-                    undoneTasks.remove(taskNumber);
-                    taskNumber--;
-                    if (!sendTask(chatId, bot)){
-                        sendMessage(82, chatId, bot);
-                    }
-                } else
+                    acceptTask(bot);
+                    return false;
+                }
+                // Reject
                 if (updateMessageText.equals(buttonDao.getButtonText(52))) {
-                    ps = connection.prepareStatement("UPDATE TASK SET STATUS = ? WHERE ID = ?");
-                    ps.setInt(1, 3);
-                    ps.setLong(2, undoneTasksId.get(taskNumber));
-                    ps.execute();
-                    undoneTasks.remove(taskNumber);
-                    taskNumber--;
-                    if (!sendTask(chatId, bot)){
-                        sendMessage(82, chatId, bot);
-                    }
-
-
-                } else
+                    rejectTask(bot);
+                    return false;
+                }
+                // For another worker
                 if (updateMessageText.equals(buttonDao.getButtonText(53))) {
-                    ps = connection.prepareStatement("SELECT * FROM USER");
-                    ps.execute();
-                    ResultSet rs = ps.getResultSet();
-                    rs.next();
-                    StringBuilder sb = new StringBuilder();
-                    while (!rs.isAfterLast()){
-                        sb.append("/id");
-                        sb.append(rs.getInt("ID"));
-                        sb.append(" ").append(rs.getString("NAME")).append("\n");
-                        rs.next();
-                    }
-                    sendMessage(sb.toString(), chatId, bot);
-                    waitingType = WaitingType.TASK_WORKER;
-                } else
-
+                    sendToAnotherWorker(bot);
+                    return false;
+                }
+                // Next task
                 if (updateMessageText.equals(buttonDao.getButtonText(54))) {
-                    if (++taskNumber == undoneTasks.size()){
-                        sendMessage(82, chatId, bot);
-                        taskNumber--;
-                    }
-                    sendMessage(undoneTasks.get(taskNumber), chatId, bot);
-                } else
-
+                    nextTask(bot);
+                    return false;
+                }
+                //Previous task
                 if (updateMessageText.equals(buttonDao.getButtonText(55))) {
-                    if (--taskNumber < 0){
-                        sendMessage(82, chatId, bot);
-                        taskNumber++;
-                    }
-                    sendMessage(undoneTasks.get(taskNumber), chatId, bot);
+                    previousTask(bot);
+                    return false;
+                }
+                // Task is done
+                if (updateMessageText.equals(buttonDao.getButtonText(56))) {
+                    taskIsDone(bot);
+                    return false;
+                }
+                if (updateMessageText.equals(buttonDao.getButtonText(10))){
+                    sendMessage(5, chatId, bot);
+                    return true;
                 }
 
                 return false;
 
+
+            // Waiting for choose worker
             case TASK_WORKER:
+                if (updateMessageText.substring(3).matches("a-zA-Zа-яА-Я.:;/")) {
+                    sendMessage(78, chatId, bot);
+                    return false;
+                }
                 Long taskWorker = Long.valueOf(updateMessageText.substring(3));
-                ps = connection.prepareStatement("UPDATE TASK SET USER_ID = ? WHERE ID = ?");
-                ps.setLong(1, taskWorker);
-                ps.setInt(2, undoneTasksId.get(taskNumber));
-                ps.execute();
+                task.setUserId(taskWorker);
+                taskDao.updateTask(task);
+                tasks.remove(task);
+                if (taskIndex != 0 ){
+                    taskIndex--;
+                }
                 sendMessage(79, chatId, bot);
-
-                ps = connection.prepareStatement("SELECT * FROM USER WHERE ID = ?");
-                ps.setLong(1, taskWorker);
-                ps.execute();
-
-                ResultSet rs = ps.getResultSet();
-                rs.next();
-                sendMessage(80, rs.getLong("CHAT_ID"), bot);
-
-                taskNumber++;
-                if (undoneTasks.size() == taskNumber){
+                sendMessage(80, userDao.getChatIdByUserId(taskWorker), bot);
+                if (tasks.size() == taskIndex) {
                     sendMessage(82, chatId, bot);
                     return true;
                 }
-                sendMessage(undoneTasks.get(taskNumber), chatId, bot);
+                sendMessage(task.toString(), chatId, bot);
                 waitingType = WaitingType.COMMAND;
                 return false;
         }
@@ -148,53 +118,80 @@ public class ShowTasksCommand extends Command {
         return false;
     }
 
-    private ResultSet getTasks(Long userId) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement(SELECT_UNDONE_TASKS);
-        ps.setLong(1, userId);
-        ps.execute();
-        ResultSet rs = ps.getResultSet();
-        if(rs.next()){
-            return rs;
-        }
-        return null;
+    private void taskIsDone(Bot bot) throws SQLException, TelegramApiException {
+        task.setStatus(Task.Status.DONE);
+        taskDao.updateTask(task);
+        sendMessage(84, task.getAddedByUserId(), bot);
+        sendMessage(task.toString(), task.getAddedByUserId(), bot);
     }
 
-    private Long getUserId(Long chatId) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement(SELECT_USER);
-        ps.setLong(1, chatId);
-        ps.execute();
+    private void previousTask(Bot bot) throws SQLException, TelegramApiException {
+        try {
+            task = tasks.get(--taskIndex);
+        } catch (Exception ex) {
+            sendMessage(82, chatId, bot);
+            taskIndex = 0;
+        }
+        sendMessage(task.toString(), chatId, bot);
+    }
 
-        ResultSet rs = ps.getResultSet();
+    private void nextTask(Bot bot) throws SQLException, TelegramApiException {
+        try {
+            task = tasks.get(++taskIndex);
+        } catch (Exception ex) {
+            sendMessage(82, chatId, bot);
+            taskIndex = tasks.size() - 1;
+        }
+        sendMessage(task.toString(), chatId, bot);
+
+    }
+
+    private void sendToAnotherWorker(Bot bot) throws SQLException, TelegramApiException {
+        ResultSet rs = userDao.getUsers();
         rs.next();
-        return rs.getLong("ID");
+        StringBuilder sb = new StringBuilder();
+        while (!rs.isAfterLast()) {
+            sb.append("/id");
+            sb.append(rs.getInt("ID"));
+            sb.append(" ").append(rs.getString("NAME")).append("\n");
+            rs.next();
+        }
+        sendMessage(sb.toString(), chatId, bot);
+        waitingType = WaitingType.TASK_WORKER;
     }
 
-    private ArrayList<String> getUndoneTasks() throws SQLException {
-        ArrayList<String> undoneTasks = new ArrayList<>();
+    private void rejectTask(Bot bot) throws SQLException, TelegramApiException {
+        task.setStatus(Task.Status.REJECTED);
+        taskDao.updateTask(task);
+        sendMessage(83, task.getAddedByUserId(), bot);
+        sendMessage(task.toString(), task.getAddedByUserId(), bot);
+        tasks.remove(task);
 
-        while (!rs.isAfterLast()){
-            StringBuilder sb = new StringBuilder();
-            sb.append("Task: ").append(rs.getString("TEXT")).append("\n");
-            sb.append("Deadline: ").append(rs.getString("DEADLINE")).append("\n");
-            switch (rs.getInt("STATUS")){
-                case 0:
-                    sb.append("Undone");
-                    break;
-                case 2:
-                    sb.append("Waiting for confirmation");
-                    break;
-            }
-            undoneTasks.add(sb.toString());
-            undoneTasksId.add(rs.getInt("ID"));
-            rs.next();
-
+        if (taskIndex != 0) {
+            taskIndex--;
         }
-        return undoneTasks;
+        task = tasks.get(taskIndex);
+
+        if (!sendTask(chatId, bot)) {
+            sendMessage(82, chatId, bot);
+        }
+    }
+
+    private void acceptTask(Bot bot) throws SQLException, TelegramApiException {
+        task.setStatus(Task.Status.DOING);
+        taskDao.updateTask(task);
+        if (taskIndex != tasks.size() - 1) {
+            taskIndex++;
+        }
+
+        if (!sendTask(chatId, bot)) {
+            sendMessage(82, chatId, bot);
+        }
     }
 
     private boolean sendTask(Long chatId, Bot bot) throws SQLException, TelegramApiException {
-        if (taskNumber < undoneTasks.size() && taskNumber > 0) {
-            sendMessage(undoneTasks.get(taskNumber), chatId, bot);
+        if (taskIndex < tasks.size() && taskIndex >= 0) {
+            sendMessage(task.toString(), chatId, bot);
             return true;
         }
         return false;
