@@ -166,4 +166,17 @@ public class DateUtil {
         }
         return date;
     }
+
+    public static Date parseString(String str){
+        String[] dates = new String[3];
+        dates[0] = str.substring(0, 2);
+        dates[1] = str.substring(3, 5);
+        dates[2] = str.substring(6, 10);
+
+        int day = Integer.parseInt(dates[0]);
+        int month = Integer.parseInt(dates[1]) - 1;
+        int year = Integer.parseInt(dates[2]) - 1900;
+
+        return new Date(year, month, day);
+    }
 }

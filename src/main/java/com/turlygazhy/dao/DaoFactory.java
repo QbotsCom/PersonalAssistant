@@ -92,4 +92,8 @@ public class DaoFactory {
     public SavedResultsDao getSavedResultsDao() {
         return new SavedResultsDao(connection);
     }
+
+    public TaskDao getTaskDao() {
+        return new TaskDao(connection);
+    }
 }

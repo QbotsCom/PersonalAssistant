@@ -41,6 +41,7 @@ public abstract class Command {
     protected GoalDao goalDao = factory.getGoalDao();
     protected ThesisDao thesisDao = factory.getThesisDao();
     protected SavedResultsDao savedResultsDao = factory.getSavedResultsDao();
+    protected TaskDao taskDao = factory.getTaskDao();
 
     protected WaitingType waitingType;
     protected org.telegram.telegrambots.api.objects.Message updateMessage;
