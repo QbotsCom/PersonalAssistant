@@ -2,20 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ebaacb9a-63d9-4ed9-bd49-0b8c67c03d9c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/AddNewTaskCommand.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/AddNewTaskCommand.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand$1.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/dao/impl/UserDao.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/dao/impl/UserDao.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/tool/DateUtil.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/tool/DateUtil.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandFactory$1.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandFactory$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandFactory.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandFactory.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandType.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/CommandType.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandFactory.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandType.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -534,7 +524,14 @@
       <option name="project" value="LOCAL" />
       <updated>1495774276035</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Change ShowTasksCommand.java.&#10;Add StartCommand.java">
+      <created>1495791926952</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1495791926952</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -637,7 +634,8 @@
     <MESSAGE value="un required classes were deleted" />
     <MESSAGE value="add new entity Task." />
     <MESSAGE value="Change AddNewTaskCommand.class:&#10;- Transfer work with database to TaskDao&#10;- Add Deadline date" />
-    <option name="LAST_COMMIT_MESSAGE" value="Change AddNewTaskCommand.class:&#10;- Transfer work with database to TaskDao&#10;- Add Deadline date" />
+    <MESSAGE value="Change ShowTasksCommand.java.&#10;Add StartCommand.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change ShowTasksCommand.java.&#10;Add StartCommand.java" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
