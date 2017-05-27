@@ -6,6 +6,7 @@ import com.turlygazhy.dao.GoalDao;
 import com.turlygazhy.dao.impl.*;
 import com.turlygazhy.entity.Message;
 import com.turlygazhy.entity.WaitingType;
+import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendContact;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
@@ -13,12 +14,16 @@ import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Contact;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yerassyl_Turlygazhy on 11/27/2016.
@@ -47,8 +52,10 @@ public abstract class Command {
     protected org.telegram.telegrambots.api.objects.Message updateMessage;
     protected String updateMessageText;
     protected Long chatId;
+    private Bot bot;
 
     public void initMessage(Update update, Bot bot) throws TelegramApiException, SQLException {
+        this.bot = bot;
         updateMessage = update.getMessage();
         if (updateMessage == null) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -116,6 +123,19 @@ public abstract class Command {
         }
     }
 
+    public void sendMessage(long messageId, int keyboardMarkUpId) throws SQLException, TelegramApiException {
+        sendMessage(messageId, keyboardMarkUpDao.select(keyboardMarkUpId));
+    }
+
+    public void sendMessage(long messageId, ReplyKeyboard keyboard) throws SQLException, TelegramApiException {
+        bot.sendMessage(new SendMessage()
+                .setChatId(chatId)
+                .setText(messageDao.getMessageText(messageId))
+                .setReplyMarkup(keyboard)
+                .setParseMode(ParseMode.HTML)
+        );
+    }
+
     public void sendMessage(String text, long chatId, TelegramLongPollingBot bot, Contact contact) throws SQLException, TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
@@ -167,6 +187,27 @@ public abstract class Command {
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    protected List<InlineKeyboardButton> getNextPrevRows(boolean prev, boolean next) {
+        List<InlineKeyboardButton> row = new ArrayList<>();
+
+        if (prev) {
+            InlineKeyboardButton prevButton = new InlineKeyboardButton();
+            String prevText = "prev";//todo это должно браться из бд
+            prevButton.setText(prevText);
+            prevButton.setCallbackData(prevText);
+            row.add(prevButton);
+        }
+        if (next) {
+            InlineKeyboardButton nextButton = new InlineKeyboardButton();
+            String prevText = "next";//todo это должно браться из бд
+            nextButton.setText(prevText);
+            nextButton.setCallbackData(prevText);
+            row.add(nextButton);
+        }
+
+        return row;
     }
 
 }
