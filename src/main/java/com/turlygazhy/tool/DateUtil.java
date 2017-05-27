@@ -157,7 +157,7 @@ public class DateUtil {
 
     public static Date getLastMonthLastDay() {
         Date date = new Date();
-        int month = date.getMonth();//todo а что если январь
+        int month = date.getMonth();//а что если январь
         while (true) {
             date.setDate(date.getDate() - 1);
             if (month > date.getMonth()) {
