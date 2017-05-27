@@ -1,6 +1,7 @@
 package com.turlygazhy;
 
 import com.turlygazhy.command.Command;
+import com.turlygazhy.command.impl.ShowInfoCommand;
 import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.dao.impl.ButtonDao;
 import com.turlygazhy.dao.impl.KeyboardMarkUpDao;
@@ -21,14 +22,6 @@ import java.sql.SQLException;
 public class Conversation {
     private CommandService commandService = new CommandService();
     private Command command;
-    private DaoFactory factory = DaoFactory.getFactory();
-    private MessageDao messageDao = factory.getMessageDao();
-    private ButtonDao buttonDao = factory.getButtonDao();
-    private KeyboardMarkUpDao keyboardMarkUpDao = factory.getKeyboardMarkUpDao();
-
-    private WaitingType waitingType;
-    private String nisha;
-    private String naviki;
 
     public void handleUpdate(Update update, Bot bot) throws SQLException, TelegramApiException {
         org.telegram.telegrambots.api.objects.Message updateMessage = update.getMessage();
@@ -47,11 +40,10 @@ public class Conversation {
                 return;
             }
             if (command == null) {
-                Message message = messageDao.getMessage(7);
-                SendMessage sendMessage = message.getSendMessage();
-                sendMessage.setChatId(update.getMessage().getChatId());
-//                sendMessage.setReplyMarkup(keyboardMarkUpDao.select(message.getKeyboardMarkUpId()));
-                bot.sendMessage(sendMessage);
+                ShowInfoCommand showInfoCommand = new ShowInfoCommand();
+                int cannotHandleUpdateMessageId = 7;
+                showInfoCommand.setMessageId(cannotHandleUpdateMessageId);
+                showInfoCommand.execute(update, bot);
                 return;
             }
         }
