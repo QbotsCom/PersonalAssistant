@@ -61,7 +61,8 @@ public abstract class Command {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             updateMessage = callbackQuery.getMessage();
             updateMessageText = callbackQuery.getData();
-            String waitText = messageDao.getMessageText(208);
+            String waitText = "Ждите...";//todo вынеси плиз это в бд
+//            String waitText = messageDao.getMessageText(208);
             if (chatId == null) {
                 chatId = updateMessage.getChatId();
             }
@@ -189,21 +190,22 @@ public abstract class Command {
         }
     }
 
+    protected String prevText = "prev";//todo это должно браться из бд
+    protected String nextText = "next";//todo это должно браться из бд
+
     protected List<InlineKeyboardButton> getNextPrevRows(boolean prev, boolean next) {
         List<InlineKeyboardButton> row = new ArrayList<>();
 
         if (prev) {
             InlineKeyboardButton prevButton = new InlineKeyboardButton();
-            String prevText = "prev";//todo это должно браться из бд
             prevButton.setText(prevText);
             prevButton.setCallbackData(prevText);
             row.add(prevButton);
         }
         if (next) {
             InlineKeyboardButton nextButton = new InlineKeyboardButton();
-            String prevText = "next";//todo это должно браться из бд
-            nextButton.setText(prevText);
-            nextButton.setCallbackData(prevText);
+            nextButton.setText(nextText);
+            nextButton.setCallbackData(nextText);
             row.add(nextButton);
         }
 

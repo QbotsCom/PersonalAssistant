@@ -4,6 +4,7 @@ import com.turlygazhy.Bot;
 import com.turlygazhy.command.Command;
 import com.turlygazhy.entity.Task;
 import com.turlygazhy.entity.WaitingType;
+import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -18,6 +19,7 @@ import java.util.List;
 
 public class AddNewTaskCommand extends Command {
     private Task task;
+    private int shownDates = 0;
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
@@ -32,15 +34,36 @@ public class AddNewTaskCommand extends Command {
         switch (waitingType) {
             case TASK_TEXT:
                 task.setText(updateMessageText);
-                sendMessage(77, getDeadlineKeyboard());
+                sendMessage(77, getDeadlineKeyboard(shownDates));
                 waitingType = WaitingType.TASK_DEADLINE;
                 return false;
 
             case TASK_DEADLINE:
 
-                task.setDeadline(updateMessageText);
 
-                //todo check next and prev
+                if (updateMessageText.equals(nextText)) {
+                    shownDates++;
+                    bot.editMessageText(new EditMessageText()
+                            .setMessageId(updateMessage.getMessageId())
+                            .setChatId(chatId)
+                            .setText(messageDao.getMessageText(77))
+                            .setReplyMarkup(getDeadlineKeyboard(shownDates))
+                    );
+                    return false;
+                }
+
+                if (updateMessageText.equals(prevText)) {
+                    shownDates--;
+                    bot.editMessageText(new EditMessageText()
+                            .setMessageId(updateMessage.getMessageId())
+                            .setChatId(chatId)
+                            .setText(messageDao.getMessageText(77))
+                            .setReplyMarkup(getDeadlineKeyboard(shownDates))
+                    );
+                    return false;
+                }
+
+                task.setDeadline(updateMessageText);
 
                 sendMessage(78, chatId, bot);
 
@@ -72,11 +95,12 @@ public class AddNewTaskCommand extends Command {
         return false;
     }
 
-    private InlineKeyboardMarkup getDeadlineKeyboard() {
+    private InlineKeyboardMarkup getDeadlineKeyboard(int shownDates) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
         Date date = new Date();
+        date.setDate(date.getDate() + (shownDates * 9));
         List<InlineKeyboardButton> row = null;
         for (int i = 1; i < 10; i++) {
             if (row == null) {
@@ -108,7 +132,12 @@ public class AddNewTaskCommand extends Command {
             date.setDate(date.getDate() + 1);
         }
 
-        rows.add(getNextPrevRows(true, true));
+        if (shownDates > 0) {
+            rows.add(getNextPrevRows(true, true));
+        } else {
+            rows.add(getNextPrevRows(false, true));
+        }
+
 
         keyboard.setKeyboard(rows);
         return keyboard;
