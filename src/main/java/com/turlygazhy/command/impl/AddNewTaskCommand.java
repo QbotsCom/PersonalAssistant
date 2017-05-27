@@ -24,7 +24,7 @@ public class AddNewTaskCommand extends Command {
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         initMessage(update, bot);
         if (waitingType == null) {
-            sendMessage(76, chatId, bot);
+            sendMessage(76, chatId, bot);//todo пиши рядом с этим методом какое сообщ он отправляет юзеру
             waitingType = WaitingType.TASK_TEXT;
             task = new Task(chatId);
             return false;

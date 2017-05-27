@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ebaacb9a-63d9-4ed9-bd49-0b8c67c03d9c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +27,17 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Conversation.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AddNewTaskCommand.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="26" column="105" lean-forward="false" selection-start-line="26" selection-start-column="105" selection-end-line="26" selection-end-column="105" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Conversation.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="59">
@@ -112,16 +121,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommandService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/service/CommandService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="79">
-              <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="DaoFactory.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/DaoFactory.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -199,7 +198,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" />
         <option value="$MAVEN_REPOSITORY$/com/h2database/h2/1.4.195/h2-1.4.195.jar!/org/h2/jdbc/JdbcResultSet.class" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandType.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandFactory.java" />
@@ -211,6 +209,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" />
       </list>
     </option>
   </component>
@@ -784,7 +783,14 @@
       <option name="project" value="LOCAL" />
       <updated>1495862625628</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="handleUpdate in Conversation was updated">
+      <created>1495862945981</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1495862945981</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TodoView">
@@ -882,7 +888,8 @@
     <MESSAGE value="Change ShowTasksCommand.java.&#10;Add StartCommand.java" />
     <MESSAGE value="delete unrequired todos" />
     <MESSAGE value="ShowInfoCommand was added" />
-    <option name="LAST_COMMIT_MESSAGE" value="ShowInfoCommand was added" />
+    <MESSAGE value="handleUpdate in Conversation was updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="handleUpdate in Conversation was updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1005,14 +1012,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="98">
           <caret line="145" column="0" lean-forward="false" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-40">
-          <caret line="41" column="32" lean-forward="false" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -1191,16 +1190,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="16" column="25" lean-forward="false" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -1231,6 +1220,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="59">
           <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="16" column="25" lean-forward="false" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="26" column="105" lean-forward="false" selection-start-line="26" selection-start-column="105" selection-end-line="26" selection-end-column="105" />
           <folding />
         </state>
       </provider>
