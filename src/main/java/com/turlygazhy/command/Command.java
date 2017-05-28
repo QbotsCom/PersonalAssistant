@@ -54,6 +54,9 @@ public abstract class Command {
     protected Long chatId;
     private Bot bot;
 
+    protected Command() throws SQLException {
+    }
+
     public void initMessage(Update update, Bot bot) throws TelegramApiException, SQLException {
         this.bot = bot;
         updateMessage = update.getMessage();
@@ -61,8 +64,7 @@ public abstract class Command {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             updateMessage = callbackQuery.getMessage();
             updateMessageText = callbackQuery.getData();
-            String waitText = "Ждите...";//todo вынеси плиз это в бд
-//            String waitText = messageDao.getMessageText(208);
+            String waitText = messageDao.getMessageText(88);
             if (chatId == null) {
                 chatId = updateMessage.getChatId();
             }
@@ -190,8 +192,8 @@ public abstract class Command {
         }
     }
 
-    protected String prevText = "prev";//todo это должно браться из бд
-    protected String nextText = "next";//todo это должно браться из бд
+    protected String prevText = messageDao.getMessageText(89);
+    protected String nextText = messageDao.getMessageText(90);
 
     protected List<InlineKeyboardButton> getNextPrevRows(boolean prev, boolean next) {
         List<InlineKeyboardButton> row = new ArrayList<>();

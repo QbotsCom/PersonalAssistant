@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lol on 25.05.2017.
@@ -33,11 +34,11 @@ public class TaskDao extends AbstractDao {
         ps.execute();
     }
 
-    public ArrayList<Task> getTasks(Long userId) throws SQLException {
+    public List<Task> getTasks(Long userId) throws SQLException {
         return getTasks(userId, null);
     }
 
-    public ArrayList<Task> getTasks(Long userId, Task.Status status) throws SQLException {
+    public List<Task> getTasks(Long userId, Task.Status status) throws SQLException {
         PreparedStatement ps;
 
         if(status == null){

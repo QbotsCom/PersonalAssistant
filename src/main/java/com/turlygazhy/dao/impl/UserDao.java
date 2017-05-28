@@ -1,11 +1,14 @@
 package com.turlygazhy.dao.impl;
 
 import com.turlygazhy.connection_pool.ConnectionPool;
+import com.turlygazhy.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -61,9 +64,20 @@ public class UserDao {
         return rs.getLong(USER_ID_COLUMN_INDEX);
     }
 
-    public ResultSet getUsers() throws SQLException {
+    public List<User> getUsers() throws SQLException {
+        List<User> users = new ArrayList<>();
         PreparedStatement ps = ConnectionPool.getConnection().prepareStatement(SELECT_FROM_USER);
         ps.execute();
-        return ps.getResultSet();
+        ResultSet rs = ps.getResultSet();
+
+        while(rs.next()){
+            User user = new User();
+            user.setId(rs.getInt("ID"));
+            user.setName(rs.getString("NAME"));
+            user.setChatId(rs.getLong("CHAT_ID"));
+            users.add(user);
+        }
+
+        return users;
     }
 }

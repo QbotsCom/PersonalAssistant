@@ -3,6 +3,7 @@ package com.turlygazhy.command.impl;
 import com.turlygazhy.Bot;
 import com.turlygazhy.command.Command;
 import com.turlygazhy.entity.Task;
+import com.turlygazhy.entity.User;
 import com.turlygazhy.entity.WaitingType;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
@@ -10,7 +11,6 @@ import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,11 +21,14 @@ public class AddNewTaskCommand extends Command {
     private Task task;
     private int shownDates = 0;
 
+    public AddNewTaskCommand() throws SQLException {
+    }
+
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         initMessage(update, bot);
         if (waitingType == null) {
-            sendMessage(76, chatId, bot);//todo пиши рядом с этим методом какое сообщ он отправляет юзеру
+            sendMessage(76, chatId, bot); //Опишите задание
             waitingType = WaitingType.TASK_TEXT;
             task = new Task(chatId);
             return false;
@@ -34,19 +37,17 @@ public class AddNewTaskCommand extends Command {
         switch (waitingType) {
             case TASK_TEXT:
                 task.setText(updateMessageText);
-                sendMessage(77, getDeadlineKeyboard(shownDates));
+                sendMessage(77, getDeadlineKeyboard(shownDates)); // Введите дедлайн
                 waitingType = WaitingType.TASK_DEADLINE;
                 return false;
 
             case TASK_DEADLINE:
-
-
                 if (updateMessageText.equals(nextText)) {
                     shownDates++;
                     bot.editMessageText(new EditMessageText()
                             .setMessageId(updateMessage.getMessageId())
                             .setChatId(chatId)
-                            .setText(messageDao.getMessageText(77))
+                            .setText(messageDao.getMessageText(77)) // Введите дедлайн
                             .setReplyMarkup(getDeadlineKeyboard(shownDates))
                     );
                     return false;
@@ -57,7 +58,7 @@ public class AddNewTaskCommand extends Command {
                     bot.editMessageText(new EditMessageText()
                             .setMessageId(updateMessage.getMessageId())
                             .setChatId(chatId)
-                            .setText(messageDao.getMessageText(77))
+                            .setText(messageDao.getMessageText(77)) // Введите дедлайн
                             .setReplyMarkup(getDeadlineKeyboard(shownDates))
                     );
                     return false;
@@ -67,15 +68,12 @@ public class AddNewTaskCommand extends Command {
 
                 sendMessage(78, chatId, bot);
 
-                ResultSet rs = userDao.getUsers();//todo method getUsers должен возвращать List<User>
-                rs.next();
+                List<User> users = userDao.getUsers();
 
                 StringBuilder sb = new StringBuilder();
-                while (!rs.isAfterLast()) {
+                for (User user : users) {
                     sb.append("/id");
-                    sb.append(rs.getInt("ID"));
-                    sb.append(" ").append(rs.getString("NAME")).append("\n");
-                    rs.next();
+                    sb.append(user.getName()).append("\n");
                 }
 
                 sendMessage(sb.toString(), chatId, bot);
@@ -83,14 +81,20 @@ public class AddNewTaskCommand extends Command {
                 return false;
 
             case TASK_WORKER:
-                task.setUserId(Long.valueOf(updateMessageText.substring(3)));
-                taskDao.insertTask(task);
-                informExecutor();
+                users = userDao.getUsers();
+                String taskWorker = updateMessageText.substring(3);
+                for (User user : users) {
+                    if (user.getName().equals(taskWorker)) {
+                        task.setUserId(user.getChatId());
+                        taskDao.insertTask(task);
+                        informExecutor(bot, user.getChatId());
 
-                sendMessage(79, chatId, bot);
-                sendMessage(80, userDao.getChatIdByUserId(task.getUserId()), bot);
-
-                return true;
+                        waitingType = WaitingType.COMMAND;
+                        sendMessage(79, chatId, bot); //Задание записано
+                        return true;
+                    }
+                }
+                return false;
         }
         return false;
     }
@@ -143,7 +147,7 @@ public class AddNewTaskCommand extends Command {
         return keyboard;
     }
 
-    private void informExecutor() { //todo передача задания здесь
-
+    private void informExecutor(Bot bot, Long chatId) throws SQLException, TelegramApiException { //передача задания
+        sendMessage(80, chatId, bot);
     }
 }

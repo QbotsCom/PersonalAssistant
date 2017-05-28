@@ -14,6 +14,9 @@ import java.sql.SQLException;
  * Created by user on 5/27/17.
  */
 public class ShowInfoCommand extends Command {
+    public ShowInfoCommand() throws SQLException {
+    }
+
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         Long chatId = update.getMessage().getChatId();

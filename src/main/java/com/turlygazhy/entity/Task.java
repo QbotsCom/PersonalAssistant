@@ -1,5 +1,10 @@
 package com.turlygazhy.entity;
 
+import com.turlygazhy.command.CommandFactory;
+import com.turlygazhy.dao.DaoFactory;
+import com.turlygazhy.dao.impl.MessageDao;
+
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -29,7 +34,9 @@ public class Task {
         public int getId() {
             return id;
         }
-    };
+    }
+
+    ;
 
     public Task() {
     }
@@ -82,16 +89,35 @@ public class Task {
         return status;
     }
 
+    public String getStatusString() {
+        try {
+            MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+            switch (status) {
+                case DOING:
+                    return messageDao.getMessageText(92);
+                case DONE:
+                    return messageDao.getMessageText(93);
+                case WAITING_FOR_CONFIRMATION:
+                    return messageDao.getMessageText(94);
+                case REJECTED:
+                    return messageDao.getMessageText(95);
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+    }
+
     public void setStatus(int status) {
-        for (Status type : Status.values()){
-            if (type.getId() == status){
+        for (Status type : Status.values()) {
+            if (type.getId() == status) {
                 this.status = type;
                 return;
             }
         }
     }
 
-    public void setStatus(Status status){
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -99,9 +125,9 @@ public class Task {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.text).append("\n")
-                .append(deadline).append("\n")
-                .append(status).append("\n");
+                .append(getStatusString()).append("\n")
+                .append(deadline).append("\n");
 
         return sb.toString();
-    }
+}
 }

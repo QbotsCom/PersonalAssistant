@@ -15,13 +15,12 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Turlygazy
  */
-public class ConnectionPool {//todo в бд куча не нужных таблиц удали
+public class ConnectionPool {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
     //data for settings of connection
     private static final int CONNECTION_NUMBER = 10;
-//    private static final String JDBC_URL = "jdbc:h2:~/test;AUTO_SERVER=TRUE";//todo назови бд по другому
-    private static final String JDBC_URL = "jdbc:h2:~/test2";
+    private static final String JDBC_URL = "jdbc:h2:~/PersonalAssistant;AUTO_SERVER=TRUE";
     private static final String DB_LOGIN = "sa";
     private static final String DB_PASSWORD = "";
 

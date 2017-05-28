@@ -7,7 +7,7 @@ import com.turlygazhy.exception.NotRealizedMethodException;
  */
 public enum CommandType {
     ADD_NEW_TASK(49),
-    START(1),
+    SHOW_INFO(1),
     SHOW_TASKS(51);
 
     private final int id;
