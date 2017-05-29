@@ -2,7 +2,6 @@ package com.turlygazhy.dao.impl;
 
 import com.turlygazhy.dao.AbstractDao;
 import com.turlygazhy.entity.Task;
-import com.turlygazhy.tool.DateUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +15,7 @@ import java.util.List;
  */
 public class TaskDao extends AbstractDao {
     private final Connection connection;
-    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?)"; //
+    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?)"; //
     private final String SELECT_TASK_BY_USER_ID_AND_STATUS = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS = ?"; //
     private final String SELECT_TASK_BY_USER_ID = "SELECT * FROM TASK WHERE USER_ID = ?"; //
     private final String UPDATE_TASK = "UPDATE TASK SET STATUS = ?, USER_ID = ? WHERE ID = ?"; //
@@ -30,7 +29,14 @@ public class TaskDao extends AbstractDao {
         ps.setLong(1, task.getUserId());
         ps.setLong(2, task.getAddedByUserId());
         ps.setString(3, task.getDeadline());
-        ps.setString(4, task.getText());
+        ps.setBoolean(4, task.isHasAudio());
+        if (task.isHasAudio()) {
+            ps.setString(5, task.getVoiceMessageId());
+            ps.setString(6, null);
+        } else {
+            ps.setString(5, null);
+            ps.setString(6, task.getText());
+        }
         ps.execute();
     }
 
@@ -41,7 +47,7 @@ public class TaskDao extends AbstractDao {
     public List<Task> getTasks(Long userId, Task.Status status) throws SQLException {
         PreparedStatement ps;
 
-        if(status == null){
+        if (status == null) {
             ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID);
         } else {
             ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID_AND_STATUS);
@@ -54,13 +60,18 @@ public class TaskDao extends AbstractDao {
         ResultSet rs = ps.getResultSet();
 
         ArrayList<Task> tasks = new ArrayList<>();
-        while (rs.next()){
-            Task task = new Task(rs.getInt("ID"));
-            task.setUserId(rs.getLong("USER_ID"));
-            task.setText(rs.getString("TEXT"));
-            task.setStatus(rs.getInt("STATUS"));
-            task.setAddedByUserId(rs.getLong("ADDED_BY_USER_ID"));
-            task.setDeadline(rs.getString("DEADLINE"));
+        while (rs.next()) {
+            Task task = new Task(rs.getInt(1));             // Task ID
+            task.setUserId(rs.getLong(2));                  // Task Executor
+            task.setAddedByUserId(rs.getLong(3));           // Added User ID
+            task.setDeadline(rs.getString(4));              // Deadline
+            task.setStatus(rs.getInt(5));                   // Status
+            task.setHasAudio(rs.getBoolean(6));             // HasAudio
+            if (task.isHasAudio()) {
+                task.setVoiceMessageId(rs.getString(7));    // Task Voice
+            } else {
+                task.setText(rs.getString(8));              // Task Text
+            }
             tasks.add(task);
         }
 

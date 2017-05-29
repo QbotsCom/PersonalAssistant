@@ -1,7 +1,9 @@
 package com.turlygazhy.dao.impl;
 
 import com.turlygazhy.connection_pool.ConnectionPool;
+import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.entity.User;
+import org.telegram.telegrambots.api.objects.Contact;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,11 +20,14 @@ public class UserDao {
     private static final String SELECT_USER_CHAT_ID = "SELECT * FROM PUBLIC.USER WHERE ID=?";
     private static final String SELECT_FROM_USER = "SELECT * FROM USER";
     private static final String SELECT_FROM_USER_BY_CHAT_ID = "SELECT * FROM USER WHERE CHAT_ID = ?";
+    private static final String ADD_USER = "INSERT INTO USER (ID, CHAT_ID, NAME) VALUES (default, ?, ?)";
+    private static final String DELETE_USER = "DELETE FROM USER WHERE CHAT_ID = ?";
     private static final int PARAMETER_USER_ID = 1;
     private static final int PARAMETER_CHAT_ID = 1;
     private static final int CHAT_ID_COLUMN_INDEX = 2;
     private static final int USER_ID_COLUMN_INDEX = 1;
     public static final int ADMIN_ID = 2;
+    private static List<User> users;
     private Connection connection;
 
     public UserDao(Connection connection) {
@@ -64,20 +69,42 @@ public class UserDao {
         return rs.getLong(USER_ID_COLUMN_INDEX);
     }
 
+    private void updateUsers() throws SQLException {
+
+        users = null;
+        getUsers();
+    }
+
     public List<User> getUsers() throws SQLException {
-        List<User> users = new ArrayList<>();
-        PreparedStatement ps = ConnectionPool.getConnection().prepareStatement(SELECT_FROM_USER);
-        ps.execute();
-        ResultSet rs = ps.getResultSet();
+        if (users == null) {
+            users = new ArrayList<>();
+            PreparedStatement ps = ConnectionPool.getConnection().prepareStatement(SELECT_FROM_USER);
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
 
-        while(rs.next()){
-            User user = new User();
-            user.setId(rs.getInt("ID"));
-            user.setName(rs.getString("NAME"));
-            user.setChatId(rs.getLong("CHAT_ID"));
-            users.add(user);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("ID"));
+                user.setName(rs.getString("NAME"));
+                user.setChatId(rs.getLong("CHAT_ID"));
+                users.add(user);
+            }
         }
-
         return users;
+    }
+
+    public void addUser(Contact contact) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(ADD_USER);
+        ps.setInt(1, contact.getUserID());
+        ps.setString(2, contact.getFirstName());
+        ps.execute();
+        updateUsers();
+    }
+
+    public void deleteUser(int userId) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(DELETE_USER);
+        ps.setInt(1, userId);
+        ps.execute();
+        updateUsers();
     }
 }

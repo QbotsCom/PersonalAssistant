@@ -7,12 +7,12 @@ import com.turlygazhy.entity.User;
 import com.turlygazhy.entity.WaitingType;
 import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by lol on 24.05.2017.
@@ -231,27 +231,30 @@ public class ShowTasksCommand extends Command {
 
     private void informAdmin(Bot bot, int message) throws SQLException, TelegramApiException {
         sendMessage(message, task.getAddedByUserId(), bot);
-        sendMessage(task.toString(), task.getAddedByUserId(), bot);
+        if (task.isHasAudio()) {
+            bot.sendVoice(new SendVoice()
+                    .setChatId(task.getAddedByUserId())
+                    .setVoice(task.getVoiceMessageId()));
+        }
+        bot.sendMessage(new SendMessage()
+        .setParseMode(ParseMode.HTML)
+        .setChatId(task.getAddedByUserId())
+        .setText(task.toString()));
     }
 
     private void sendTask(Task task, Bot bot) throws SQLException, TelegramApiException {
-        if(users == null) {
-            users = userDao.getUsers();
-        }
-        for (User user : users) {
-            if (Objects.equals(user.getChatId(), task.getUserId())) {
-                String sb = "<b>" + messageDao.getMessageText(96) + "</b>\n"+ task.getText() + "\n\n" +         // Задание
-                        "<b>" + messageDao.getMessageText(97) + "</b>\n" + user.getName() + "\n\n" +            // Ответственный
-                        "<b>" + messageDao.getMessageText(98) + "</b>\n" + task.getDeadline() + "\n\n" +        // Дедлайн
-                        "<b>" + messageDao.getMessageText(99) + "</b>\n" + task.getStatusString();              // Статус
 
-                bot.sendMessage(new SendMessage()
-                        .setText(sb)
-                        .setParseMode(ParseMode.HTML)
-                        .setChatId(chatId));
-                return;
-            }
+        if (task.isHasAudio()) {
+            bot.sendVoice(new SendVoice()
+                    .setChatId(task.getUserId())
+                    .setVoice(task.getVoiceMessageId()));
         }
+        bot.sendMessage(new SendMessage()
+                .setText(task.toString())
+                .setParseMode(ParseMode.HTML)
+                .setChatId(chatId));
+
+
     }
 
     private int getTaskCountByStatus(Task.Status status) {

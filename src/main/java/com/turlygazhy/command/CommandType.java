@@ -8,7 +8,8 @@ import com.turlygazhy.exception.NotRealizedMethodException;
 public enum CommandType {
     ADD_NEW_TASK(49),
     SHOW_INFO(1),
-    SHOW_TASKS(51);
+    SHOW_TASKS(51),
+    SHOW_WORKERS_MENU(52);
 
     private final int id;
 

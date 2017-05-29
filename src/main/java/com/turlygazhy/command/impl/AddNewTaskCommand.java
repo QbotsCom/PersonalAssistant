@@ -20,6 +20,7 @@ import java.util.List;
 public class AddNewTaskCommand extends Command {
     private Task task;
     private int shownDates = 0;
+    private List<User> users;
 
     public AddNewTaskCommand() throws SQLException {
     }
@@ -28,15 +29,43 @@ public class AddNewTaskCommand extends Command {
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         initMessage(update, bot);
         if (waitingType == null) {
-            sendMessage(76, chatId, bot); //Опишите задание
-            waitingType = WaitingType.TASK_TEXT;
+            waitingType = WaitingType.TASK_WORKER;
+            sendMessage(78, chatId, bot); // Выберите работника
+            users = userDao.getUsers();
+
+            StringBuilder sb = new StringBuilder();
+            for (User user : users) {
+                sb.append("/id");
+                sb.append(user.getName()).append("\n");
+            }
+
+            sendMessage(sb.toString(), chatId, bot);
             task = new Task(chatId);
             return false;
         }
 
         switch (waitingType) {
+            case TASK_WORKER:
+                users = userDao.getUsers();
+                String taskWorker = updateMessageText.substring(3);
+                for (User user : users) {
+                    if (user.getName().equals(taskWorker)) {
+                        task.setUserId(user.getChatId());
+                        waitingType = WaitingType.TASK_TEXT;
+                        sendMessage(76, chatId, bot); // Опишите задание
+                        return false;
+                    }
+                }
+                return false;
+
             case TASK_TEXT:
-                task.setText(updateMessageText);
+                if (updateMessage.getVoice() == null) {
+                    task.setText(updateMessageText);
+                    task.setHasAudio(false);
+                } else {
+                    task.setHasAudio(true);
+                    task.setVoiceMessageId(updateMessage.getVoice().getFileId());
+                }
                 sendMessage(77, getDeadlineKeyboard(shownDates)); // Введите дедлайн
                 waitingType = WaitingType.TASK_DEADLINE;
                 return false;
@@ -66,35 +95,12 @@ public class AddNewTaskCommand extends Command {
 
                 task.setDeadline(updateMessageText);
 
-                sendMessage(78, chatId, bot);
+                waitingType = WaitingType.COMMAND;
+                taskDao.insertTask(task);
+                informExecutor(bot, task.getUserId());
+                sendMessage(79, chatId, bot); //Задание записано
+                return true;
 
-                List<User> users = userDao.getUsers();
-
-                StringBuilder sb = new StringBuilder();
-                for (User user : users) {
-                    sb.append("/id");
-                    sb.append(user.getName()).append("\n");
-                }
-
-                sendMessage(sb.toString(), chatId, bot);
-                waitingType = WaitingType.TASK_WORKER;
-                return false;
-
-            case TASK_WORKER:
-                users = userDao.getUsers();
-                String taskWorker = updateMessageText.substring(3);
-                for (User user : users) {
-                    if (user.getName().equals(taskWorker)) {
-                        task.setUserId(user.getChatId());
-                        taskDao.insertTask(task);
-                        informExecutor(bot, user.getChatId());
-
-                        waitingType = WaitingType.COMMAND;
-                        sendMessage(79, chatId, bot); //Задание записано
-                        return true;
-                    }
-                }
-                return false;
         }
         return false;
     }

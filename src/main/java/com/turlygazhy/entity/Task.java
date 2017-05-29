@@ -1,11 +1,11 @@
 package com.turlygazhy.entity;
 
-import com.turlygazhy.command.CommandFactory;
 import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.dao.impl.MessageDao;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by lol on 25.05.2017.
@@ -18,6 +18,8 @@ public class Task {
     private Long userId;
     private Long addedByUserId;
     private Status status;
+    private String voiceMessageId;
+    private boolean hasAudio;
 
     public enum Status {
         DOING(0),
@@ -35,8 +37,6 @@ public class Task {
             return id;
         }
     }
-
-    ;
 
     public Task() {
     }
@@ -121,13 +121,47 @@ public class Task {
         this.status = status;
     }
 
+    public boolean isHasAudio() {
+        return hasAudio;
+    }
+
+    public void setHasAudio(boolean hasAudio) {
+        this.hasAudio = hasAudio;
+    }
+
+
+    public void setVoiceMessageId(String audioId) {
+        this.voiceMessageId = audioId;
+    }
+
+    public String getVoiceMessageId() {
+        return voiceMessageId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.text).append("\n")
-                .append(getStatusString()).append("\n")
-                .append(deadline).append("\n");
+        MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+        List<User> users;
 
-        return sb.toString();
+        try {
+            users = DaoFactory.getFactory().getUserDao().getUsers();
+            for (User user : users) {
+                if (Objects.equals(user.getChatId(), this.getUserId())) {
+                    if (!this.isHasAudio()) {
+                        sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>\n").append(this.getText()).append("\n\n");
+                    }
+                    sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
+                            .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
+                            .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString());           // Статус
+                    return sb.toString();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
-}
+
