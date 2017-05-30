@@ -87,13 +87,13 @@ public class ShowStatisticCommand extends Command {
                         String deadlineStr = task.getDeadline();
                         String dateOfCompletionStr = task.getDateOfCompletion();
 
-                        int deadline = Integer.valueOf(deadlineStr.substring(0, 2))*1000
-                                + Integer.valueOf(deadlineStr.substring(3));
+                        int deadline = Integer.valueOf(deadlineStr.substring(0, 2))
+                                + Integer.valueOf(deadlineStr.substring(3))*1000;
 
-                        int dateOfCompletion = Integer.valueOf(dateOfCompletionStr.substring(0, 2))*1000
-                                + Integer.valueOf(dateOfCompletionStr.substring(3));
-
-                        if (deadline <= dateOfCompletion){
+                        int dateOfCompletion = Integer.valueOf(dateOfCompletionStr.substring(0, 2))
+                                + Integer.valueOf(dateOfCompletionStr.substring(3))*1000;
+                        System.out.print(deadline + " " + dateOfCompletion);
+                        if (deadline > dateOfCompletion){
                             countDoneTask++;
                         }
                     }
