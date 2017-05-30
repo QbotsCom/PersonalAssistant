@@ -76,10 +76,15 @@ public class ShowWorkerMenuCommand extends Command {
                 if (contact.getUserID() == null) {
                     sendMessage(103, chatId, bot);      // Данный пользоваетль не зарегистрирован в Telegram
                 } else {
-                    userDao.addUser(contact);
-                    sendMessage(5, contact.getUserID(), bot);   // Главное меню для работника
-                    sendMessage(102, chatId, bot);      // Сотрудник добавлен
-                    waitingType = WaitingType.COMMAND;
+                    if (userDao.addUser(contact))
+                    {
+                        sendMessage(6, contact.getUserID(), bot);   // Главное меню для работника
+                        sendMessage(102, chatId, bot);      // Сотрудник добавлен
+                        waitingType = WaitingType.COMMAND;
+                    } else {
+                        sendMessage(109, chatId, bot);      // Данный сотрудник уже добавлен
+                        waitingType = WaitingType.COMMAND;
+                    }
                 }
                 return false;
             case CHOOSE_USER:

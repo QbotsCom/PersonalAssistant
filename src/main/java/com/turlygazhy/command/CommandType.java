@@ -9,7 +9,8 @@ public enum CommandType {
     ADD_NEW_TASK(49),
     SHOW_INFO(1),
     SHOW_TASKS(51),
-    SHOW_WORKERS_MENU(52);
+    SHOW_WORKERS_MENU(52),
+    SHOW_STATISTIC(53);
 
     private final int id;
 

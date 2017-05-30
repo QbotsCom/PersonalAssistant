@@ -35,8 +35,11 @@ public class AddNewTaskCommand extends Command {
 
             StringBuilder sb = new StringBuilder();
             for (User user : users) {
-                sb.append("/id");
-                sb.append(user.getName()).append("\n");
+                sb.append("/id")
+                        .append(user.getChatId())
+                        .append(" - ")
+                        .append(user.getName())
+                        .append("\n");
             }
 
             sendMessage(sb.toString(), chatId, bot);
@@ -47,15 +50,10 @@ public class AddNewTaskCommand extends Command {
         switch (waitingType) {
             case TASK_WORKER:
                 users = userDao.getUsers();
-                String taskWorker = updateMessageText.substring(3);
-                for (User user : users) {
-                    if (user.getName().equals(taskWorker)) {
-                        task.setUserId(user.getChatId());
-                        waitingType = WaitingType.TASK_TEXT;
-                        sendMessage(76, chatId, bot); // Опишите задание
-                        return false;
-                    }
-                }
+                Long taskWorker = Long.valueOf(updateMessageText.substring(3));
+                task.setUserId(taskWorker);
+                waitingType = WaitingType.TASK_TEXT;
+                sendMessage(76, chatId, bot); // Опишите задание
                 return false;
 
             case TASK_TEXT:

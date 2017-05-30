@@ -19,6 +19,9 @@ public class Task {
     private Long addedByUserId;
     private Status status;
     private String voiceMessageId;
+    private String report;
+    private String dateOfCompletion;
+
     private boolean hasAudio;
 
     public enum Status {
@@ -35,6 +38,34 @@ public class Task {
 
         public int getId() {
             return id;
+        }
+
+        private static Status getStatus(int id){
+            return Status.values()[id];
+        }
+
+        public String getStatusString(int id){
+            return getStatusString(Status.getStatus(id));
+        }
+
+        public String getStatusString(Status status){
+            try {
+                MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+                switch (status) {
+                    case WAITING_FOR_CONFIRMATION:
+                        return messageDao.getMessageText(87);   // Ожидание подтверждения
+                    case DOING:
+                        return messageDao.getMessageText(110);   // Выполняется
+                    case REJECTED:
+                        return messageDao.getMessageText(86);   // Отклонено
+                    case DONE:
+                        return messageDao.getMessageText(85);   // Выполнено
+                }
+            }
+            catch (SQLException ex){
+
+            }
+            return null;
         }
     }
 
@@ -129,13 +160,29 @@ public class Task {
         this.hasAudio = hasAudio;
     }
 
-
     public void setVoiceMessageId(String audioId) {
         this.voiceMessageId = audioId;
     }
 
     public String getVoiceMessageId() {
         return voiceMessageId;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
+    }
+
+
+    public String getDateOfCompletion() {
+        return dateOfCompletion;
+    }
+
+    public void setDateOfCompletion(String dateOfCompletion) {
+        this.dateOfCompletion = dateOfCompletion;
     }
 
     @Override
@@ -153,7 +200,11 @@ public class Task {
                     }
                     sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
                             .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
-                            .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString());           // Статус
+                            .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString()).append("\n\n");           // Статус
+                    if (status.equals(Status.DONE)){
+                        sb.append("<b>").append(messageDao.getMessageText(106)).append("</b>\n").append(report).append("\n\n");               // Отчет
+                        sb.append("<b>").append(messageDao.getMessageText(108)).append("</b>\n").append(dateOfCompletion).append("\n");     // Закончен
+                    }
                     return sb.toString();
                 }
             }

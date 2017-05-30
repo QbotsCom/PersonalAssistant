@@ -32,6 +32,11 @@ public class UserDao {
 
     public UserDao(Connection connection) {
         this.connection = connection;
+        try {
+            getUsers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Long getAdminChatId() {
@@ -93,12 +98,16 @@ public class UserDao {
         return users;
     }
 
-    public void addUser(Contact contact) throws SQLException {
+    public boolean addUser(Contact contact) throws SQLException {
+        if (hasUser(contact)){
+            return false;
+        }
         PreparedStatement ps = connection.prepareStatement(ADD_USER);
         ps.setInt(1, contact.getUserID());
         ps.setString(2, contact.getFirstName());
         ps.execute();
         updateUsers();
+        return true;
     }
 
     public void deleteUser(int userId) throws SQLException {
@@ -106,5 +115,13 @@ public class UserDao {
         ps.setInt(1, userId);
         ps.execute();
         updateUsers();
+    }
+
+    public boolean hasUser(Contact contact){
+        for (User user : users){
+            if (user.getChatId().equals(Long.valueOf(contact.getUserID())))
+                return true;
+        }
+        return false;
     }
 }

@@ -20,9 +20,12 @@ public class ShowInfoCommand extends Command {
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         Long chatId = update.getMessage().getChatId();
-
-        Message message = messageDao.getMessage(messageId);
-
+        Message message;
+        if (userDao.isAdmin(chatId)) {
+            message = messageDao.getMessage(messageId);
+        } else {
+            message = messageDao.getMessage(6);
+        }
         SendPhoto sendPhoto = message.getSendPhoto();
         SendMessage sendMessage = message.getSendMessage();
         if (sendPhoto != null) {

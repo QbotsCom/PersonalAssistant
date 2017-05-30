@@ -1,9 +1,6 @@
 package com.turlygazhy.command;
 
-import com.turlygazhy.command.impl.AddNewTaskCommand;
-import com.turlygazhy.command.impl.ShowInfoCommand;
-import com.turlygazhy.command.impl.ShowTasksCommand;
-import com.turlygazhy.command.impl.ShowWorkerMenuCommand;
+import com.turlygazhy.command.impl.*;
 import com.turlygazhy.exception.NotRealizedMethodException;
 
 import java.sql.SQLException;
@@ -23,6 +20,8 @@ public class CommandFactory {
                 return new ShowInfoCommand();
             case SHOW_WORKERS_MENU:
                 return new ShowWorkerMenuCommand();
+            case SHOW_STATISTIC:
+                return new ShowStatisticCommand();
             default:
                 throw new NotRealizedMethodException("Not realized for type: " + type);
         }

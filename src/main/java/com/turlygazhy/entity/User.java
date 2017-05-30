@@ -5,8 +5,8 @@ package com.turlygazhy.entity;
  */
 public class User {
     int id;
-    Long chatId;
-    String name;
+    private Long chatId;
+    private String name;
 
     public int getId() {
         return id;

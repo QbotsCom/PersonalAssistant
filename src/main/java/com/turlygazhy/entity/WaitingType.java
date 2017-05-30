@@ -10,6 +10,10 @@ public enum WaitingType {
     ANSWER_FOR_USER,
     TASK_TEXT,
     TASK_DEADLINE,
-    TASK_WORKER, CHOOSE_USER,
+    TASK_WORKER,
+    TASK_REPORT,
+    CHOOSE_USER,
+    CHOOSE_STATUS,
+
 
 }

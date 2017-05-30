@@ -12,6 +12,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,28 +35,25 @@ public class ShowTasksCommand extends Command {
         initMessage(update, bot);
 
         if (waitingType == null) {
-
             userId = userDao.getUserIdByChatId(chatId);
-            tasks = taskDao.getTasks(chatId);
-
-            if (tasks == null || tasks.size() == 0) {
-                sendMessage(82, chatId, bot);
+            if (userDao.isAdmin(chatId)) {
+                tasks = taskDao.getTasks();         // Все задания для админа
+            } else {
+                tasks = taskDao.getTasks(chatId);   // Задания для работника
+            }
+            if (!hasTasks()) {
+                sendMessageWithMainMenu(bot);
                 return true;
             }
             task = tasks.get(taskIndex);
-
             sendMessage(81, chatId, bot); // Ваши задания
-
-//            sendStatistic();
-
-
             sendTask(task, bot);
             waitingType = WaitingType.COMMAND;
             return false;
         }
 
-        if (tasks.size() == 0) {
-            sendMessage(82, chatId, bot);
+        if (!hasTasks()) {
+            sendMessageWithMainMenu(bot);
             return true;
         }
 
@@ -93,7 +91,11 @@ public class ShowTasksCommand extends Command {
                 }
                 // Back
                 if (updateMessageText.equals(buttonDao.getButtonText(10))) {
-                    sendMessage(5, chatId, bot);
+                    if (userDao.isAdmin(chatId)) {
+                        sendMessage(5, chatId, bot);
+                    } else {
+                        sendMessage(6, chatId, bot);
+                    }
                     return true;
                 }
 
@@ -116,19 +118,62 @@ public class ShowTasksCommand extends Command {
 
                         sendMessage(79, chatId, bot);
                         sendMessage(80, task.getUserId(), bot);
-                        if (tasks.size() == 0) {
-                            sendMessage(82, chatId, bot);
+
+                        if (!hasTasks()) {
+                            sendMessageWithMainMenu(bot);
                             return true;
                         }
+
                         sendTask(task, bot);
                         waitingType = WaitingType.COMMAND;
                         return false;
                     }
                 }
                 return false;
+            case TASK_REPORT:
+                task.setStatus(Task.Status.DONE);
+                task.setReport(updateMessageText);
+                Date date = new Date();
+                int dateToString = date.getDate();
+                String stringDate;
+                if (dateToString > 9) {
+                    stringDate = String.valueOf(dateToString);
+                } else {
+                    stringDate = "0" + dateToString;
+                }
+                int monthToString = date.getMonth() + 1;
+                String stringMonth;
+                if (monthToString > 9) {
+                    stringMonth = String.valueOf(monthToString);
+                } else {
+                    stringMonth = "0" + monthToString;
+                }
+                task.setDateOfCompletion(stringDate + "." + stringMonth);
+                taskDao.updateTask(task);
+                tasks.remove(taskIndex);
+                waitingType = WaitingType.COMMAND;
+                informAdmin(bot, 84);
+
+                if (taskIndex != 0) {
+                    taskIndex--;
+                }
+                if (!hasTasks()) {
+                    sendMessageWithMainMenu(bot);
+                    return true;
+                }
+                task = tasks.get(taskIndex);
+                return false;
         }
 
         return false;
+    }
+
+    private void sendMessageWithMainMenu(Bot bot) throws SQLException, TelegramApiException {
+        if (userDao.isAdmin(chatId)) {
+            sendMessage(82, chatId, bot); // Задании нет, меню админа
+        } else {
+            sendMessage(9, chatId, bot); // Задании нет, меню работника
+        }
     }
 
     private void sendStatic(Bot bot) throws SQLException, TelegramApiException {
@@ -141,28 +186,19 @@ public class ShowTasksCommand extends Command {
     }
 
     private void taskIsDone(Bot bot) throws SQLException, TelegramApiException {
-        task.setStatus(Task.Status.DONE);
-        taskDao.updateTask(task);
-        tasks.remove(taskIndex);
-        informAdmin(bot, 84);
+        waitingType = WaitingType.TASK_REPORT;
+        sendMessage(107, chatId, bot);      // Напиште отчет
+    }
 
-        if (taskIndex != 0) {
-            taskIndex--;
-        }
-        try {
-            task = tasks.get(taskIndex);
-        } catch (IndexOutOfBoundsException ex) {
-            sendMessage(82, chatId, bot);
-            return;
-        }
-
+    private boolean hasTasks() {
+        return !(tasks == null || tasks.size() == 0);
     }
 
     private void previousTask(Bot bot) throws SQLException, TelegramApiException {
         try {
             task = tasks.get(--taskIndex);
         } catch (Exception ex) {
-            sendMessage(91, chatId, bot);
+            sendMessage(91, chatId, bot);   // Дальше задании нет
             taskIndex = 0;
         }
         sendTask(task, bot);
@@ -172,7 +208,7 @@ public class ShowTasksCommand extends Command {
         try {
             task = tasks.get(++taskIndex);
         } catch (Exception ex) {
-            sendMessage(91, chatId, bot);
+            sendMessage(91, chatId, bot);   // Дальше задании нет
             taskIndex = tasks.size() - 1;
         }
         sendTask(task, bot);
@@ -237,9 +273,9 @@ public class ShowTasksCommand extends Command {
                     .setVoice(task.getVoiceMessageId()));
         }
         bot.sendMessage(new SendMessage()
-        .setParseMode(ParseMode.HTML)
-        .setChatId(task.getAddedByUserId())
-        .setText(task.toString()));
+                .setParseMode(ParseMode.HTML)
+                .setChatId(task.getAddedByUserId())
+                .setText(task.toString()));
     }
 
     private void sendTask(Task task, Bot bot) throws SQLException, TelegramApiException {
