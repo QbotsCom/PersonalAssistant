@@ -13,7 +13,7 @@ public enum WaitingType {
     TASK_WORKER,
     TASK_REPORT,
     CHOOSE_USER,
-    CHOOSE_STATUS,
+    CHOOSE_STATUS, TASK_CHOOSE_STATUS, TASK,
 
 
 }

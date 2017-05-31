@@ -18,6 +18,9 @@ public class TaskDao extends AbstractDao {
     private final Connection connection;
     private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null)"; //
     private final String SELECT_TASK_BY_USER_ID_AND_STATUS = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS = ?"; //
+    private final String SELECT_TASK_BY_USER_ID_AND_STATUS_NOT_EQUAL = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS != ?"; //
+    private final String SELECT_TASK_BY_STATUS = "SELECT * FROM TASK WHERE STATUS = ?"; //
+    private final String SELECT_TASK_BY_STATUS_NOT_EQUAL = "SELECT * FROM TASK WHERE STATUS != ?"; //
     private final String SELECT_TASK_BY_USER_ID = "SELECT * FROM TASK WHERE USER_ID = ?"; //
     private final String UPDATE_TASK = "UPDATE TASK SET STATUS = ?, USER_ID = ?, REPORT = ?, DATE_OF_COMPLETION = ? WHERE ID = ?"; //
 
@@ -52,13 +55,24 @@ public class TaskDao extends AbstractDao {
     public List<Task> getTasks(Long userId, Task.Status status) throws SQLException {
         PreparedStatement ps;
         if (userId == null) {
-            ps = connection.prepareStatement(SELECT_TASK);
+            if (status == null) {
+                ps = connection.prepareStatement(SELECT_TASK);
+            } else if (status == Task.Status.DONE){
+                ps = connection.prepareStatement(SELECT_TASK_BY_STATUS);
+                ps.setInt(1, status.getId());
+            } else {
+                ps = connection.prepareStatement(SELECT_TASK_BY_STATUS_NOT_EQUAL);
+                ps.setInt(1, Task.Status.DONE.getId());
+            }
         } else {
             if (status == null) {
                 ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID);
-            } else {
+            } else if(status == Task.Status.DONE){
                 ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID_AND_STATUS);
                 ps.setInt(2, status.getId());
+            } else {
+                ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID_AND_STATUS_NOT_EQUAL);
+                ps.setInt(2, Task.Status.DONE.getId());
             }
             ps.setLong(1, userId);
         }
@@ -96,5 +110,9 @@ public class TaskDao extends AbstractDao {
         ps.setString(3, task.getReport());
         ps.setInt(5, task.getId());
         ps.execute();
+    }
+
+    public List<Task> getTasks(Task.Status status) throws SQLException {
+        return getTasks(null, status);
     }
 }

@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ebaacb9a-63d9-4ed9-bd49-0b8c67c03d9c" name="Default" comment="SQL">
+    <list default="true" id="ebaacb9a-63d9-4ed9-bd49-0b8c67c03d9c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/Bot.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/Bot.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand$1.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/command/impl/ShowTasksCommand.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/dao/impl/UserDao.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/dao/impl/UserDao.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/com/turlygazhy/entity/WaitingType.class" afterPath="$PROJECT_DIR$/target/classes/com/turlygazhy/entity/WaitingType.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowStatisticCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowStatisticCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java" afterPath="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,8 +42,8 @@
       <file leaf-file-name="ShowStatisticCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowStatisticCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+            <state relative-caret-position="1785">
+              <caret line="117" column="31" lean-forward="false" selection-start-line="117" selection-start-column="31" selection-end-line="117" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -39,41 +51,82 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="personalassistant.sql" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sql/personalassistant.sql">
+      <file leaf-file-name="UserDao.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+            <state relative-caret-position="289">
+              <caret line="28" column="40" lean-forward="false" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShowWorkerMenuCommand.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java">
+      <file leaf-file-name="ShowTasksCommand.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1071">
-              <caret line="78" column="37" lean-forward="false" selection-start-line="78" selection-start-column="37" selection-end-line="78" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Task.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="55" column="59" lean-forward="false" selection-start-line="55" selection-start-column="59" selection-end-line="55" selection-end-column="59" />
+            <state relative-caret-position="3247">
+              <caret line="221" column="32" lean-forward="false" selection-start-line="221" selection-start-column="32" selection-end-line="221" selection-end-column="32" />
               <folding>
-                <element signature="docComment;class#Task#0" expanded="false" />
-                <element signature="e#861#862#0" expanded="true" />
-                <element signature="e#911#912#0" expanded="true" />
-                <element signature="e#959#960#0" expanded="true" />
-                <element signature="e#1027#1028#0" expanded="true" />
-                <element signature="method#Task#0;class#Task#0" expanded="false" />
-                <element signature="method#getStatusString#0;class#Task#0" expanded="false" />
-                <element signature="method#setStatus#0;class#Task#0" expanded="false" />
+                <element signature="docComment;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#ShowTasksCommand#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#taskIsDone#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#previousTask#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#sendToAnotherWorker#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#rejectTask#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#acceptTask#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#informAdmin#0;class#ShowTasksCommand#0" expanded="false" />
+                <element signature="method#getTaskCountByStatus#0;class#ShowTasksCommand#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Command.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/Command.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1377">
+              <caret line="112" column="16" lean-forward="false" selection-start-line="112" selection-start-column="16" selection-end-line="112" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ShowInfoCommand.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="23" column="51" lean-forward="false" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="51" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TaskDao.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="918">
+              <caret line="64" column="53" lean-forward="false" selection-start-line="64" selection-start-column="53" selection-end-line="64" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Bot.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="424">
+              <caret line="60" column="61" lean-forward="false" selection-start-line="60" selection-start-column="61" selection-end-line="60" selection-end-column="61" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -81,10 +134,14 @@
       <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="35" column="30" lean-forward="false" selection-start-line="35" selection-start-column="30" selection-end-line="35" selection-end-column="30" />
+            <state relative-caret-position="170">
+              <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
               <folding>
-                <element signature="e#640#641#0" expanded="true" />
+                <element signature="e#217#218#0" expanded="true" />
+                <element signature="e#261#262#0" expanded="true" />
+                <element signature="e#299#300#0" expanded="true" />
+                <element signature="e#752#753#0" expanded="true" />
+                <element signature="e#807#808#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -93,8 +150,8 @@
       <file leaf-file-name="WaitingType.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+            <state relative-caret-position="238">
+              <caret line="14" column="16" lean-forward="true" selection-start-line="14" selection-start-column="16" selection-end-line="15" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -161,7 +218,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/KeyboardMarkUpDao.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/HELLO_COMMAND.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/CommandDao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/service/CommandService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/Main.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
@@ -176,18 +232,19 @@
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/MemberDao.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandType.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddNewTaskCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/DaoFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java" />
         <option value="$PROJECT_DIR$/sql/personalassistant.sql" />
         <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowStatisticCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java" />
       </list>
     </option>
   </component>
@@ -486,7 +543,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -628,6 +684,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -965,7 +1022,14 @@
       <option name="project" value="LOCAL" />
       <updated>1496140789428</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="SQL">
+      <created>1496143421508</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1496143421508</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TodoView">
@@ -990,7 +1054,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3502455" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31423897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2246596" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23146747" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1089,7 +1153,8 @@
     <MESSAGE value="Delete StartCommand." />
     <MESSAGE value="Added Show Worker" />
     <MESSAGE value="Added Admin&#10;Added User statistic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Admin&#10;Added User statistic" />
+    <MESSAGE value="SQL" />
+    <option name="LAST_COMMIT_MESSAGE" value="SQL" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1105,7 +1170,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/HELLO_COMMAND.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/com/h2database/h2/1.4.193/h2-1.4.193.jar!/org/h2/jdbc/JdbcResultSet.class" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/AddUserToPrivateGroupCommand.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Button.java">
@@ -1182,20 +1246,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/KeyboardMarkUpDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/MessageDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -1204,13 +1254,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/StartCommand.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="42" column="62" lean-forward="true" selection-start-line="42" selection-start-column="62" selection-end-line="42" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/service/CommandService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -1247,13 +1290,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="20" column="8" lean-forward="false" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/CommandFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -1276,47 +1312,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="24" column="46" lean-forward="false" selection-start-line="24" selection-start-column="46" selection-end-line="24" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/Command.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="32" column="26" lean-forward="false" selection-start-line="32" selection-start-column="26" selection-end-line="32" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/CommandDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="293">
           <caret line="39" column="62" lean-forward="false" selection-start-line="39" selection-start-column="62" selection-end-line="39" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="98" column="32" lean-forward="true" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
-          <folding>
-            <element signature="docComment;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#ShowTasksCommand#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#sendStatic#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#taskIsDone#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="e#7036#7037#0" expanded="true" />
-            <element signature="e#7096#7097#0" expanded="true" />
-            <element signature="method#previousTask#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#sendToAnotherWorker#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#rejectTask#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#acceptTask#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#informAdmin#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#sendTask#0;class#ShowTasksCommand#0" expanded="false" />
-            <element signature="method#getTaskCountByStatus#0;class#ShowTasksCommand#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1328,13 +1327,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="51" column="10" lean-forward="false" selection-start-line="51" selection-start-column="10" selection-end-line="51" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/DaoFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
@@ -1342,41 +1334,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Conversation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="78" column="37" lean-forward="false" selection-start-line="78" selection-start-column="37" selection-end-line="78" selection-end-column="37" />
+        <state relative-caret-position="168">
+          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowWorkerMenuCommand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="37" column="32" lean-forward="true" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="35" column="30" lean-forward="false" selection-start-line="35" selection-start-column="30" selection-end-line="35" selection-end-column="30" />
-          <folding>
-            <element signature="e#640#641#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="472">
+          <caret line="75" column="27" lean-forward="false" selection-start-line="75" selection-start-column="27" selection-end-line="75" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/Task.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
+        <state relative-caret-position="526">
           <caret line="55" column="59" lean-forward="false" selection-start-line="55" selection-start-column="59" selection-end-line="55" selection-end-column="59" />
           <folding>
             <element signature="docComment;class#Task#0" expanded="false" />
-            <element signature="e#861#862#0" expanded="true" />
-            <element signature="e#911#912#0" expanded="true" />
-            <element signature="e#959#960#0" expanded="true" />
-            <element signature="e#1027#1028#0" expanded="true" />
             <element signature="method#Task#0;class#Task#0" expanded="false" />
             <element signature="method#getStatusString#0;class#Task#0" expanded="false" />
             <element signature="method#setStatus#0;class#Task#0" expanded="false" />
@@ -1386,26 +1365,120 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/WaitingType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+        <state relative-caret-position="238">
+          <caret line="14" column="16" lean-forward="true" selection-start-line="14" selection-start-column="16" selection-end-line="15" selection-end-column="18" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/KeyboardMarkUpDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-290">
+          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/telegram/telegrambots-meta/2.4.4.3/telegrambots-meta-2.4.4.3.jar!/org/telegram/telegrambots/bots/AbsSender.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="58" column="25" lean-forward="false" selection-start-line="58" selection-start-column="25" selection-end-line="58" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/Command.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1377">
+          <caret line="112" column="16" lean-forward="false" selection-start-line="112" selection-start-column="16" selection-end-line="112" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/personalassistant.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="35" column="20" lean-forward="true" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowStatisticCommand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+        <state relative-caret-position="1785">
+          <caret line="117" column="31" lean-forward="false" selection-start-line="117" selection-start-column="31" selection-end-line="117" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sql/personalassistant.sql">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/UserDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+        <state relative-caret-position="289">
+          <caret line="28" column="40" lean-forward="false" selection-start-line="28" selection-start-column="40" selection-end-line="28" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/entity/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding>
+            <element signature="e#217#218#0" expanded="true" />
+            <element signature="e#261#262#0" expanded="true" />
+            <element signature="e#299#300#0" expanded="true" />
+            <element signature="e#752#753#0" expanded="true" />
+            <element signature="e#807#808#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowTasksCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3247">
+          <caret line="221" column="32" lean-forward="false" selection-start-line="221" selection-start-column="32" selection-end-line="221" selection-end-column="32" />
+          <folding>
+            <element signature="docComment;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#ShowTasksCommand#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#taskIsDone#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#previousTask#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#sendToAnotherWorker#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#rejectTask#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#acceptTask#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#informAdmin#0;class#ShowTasksCommand#0" expanded="false" />
+            <element signature="method#getTaskCountByStatus#0;class#ShowTasksCommand#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/command/impl/ShowInfoCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="23" column="51" lean-forward="false" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/dao/impl/TaskDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="64" column="53" lean-forward="false" selection-start-line="64" selection-start-column="53" selection-end-line="64" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/turlygazhy/Bot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="60" column="61" lean-forward="false" selection-start-line="60" selection-start-column="61" selection-end-line="60" selection-end-column="61" />
           <folding />
         </state>
       </provider>

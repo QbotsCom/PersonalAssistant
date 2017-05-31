@@ -8,6 +8,16 @@ public class User {
     private Long chatId;
     private String name;
 
+    public Long getAddydBy() {
+        return addydBy;
+    }
+
+    public void setAddydBy(Long addydBy) {
+        this.addydBy = addydBy;
+    }
+
+    private Long addydBy;
+
     public int getId() {
         return id;
     }
@@ -34,6 +44,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "/id" + chatId + " - " + name + "\n";
+        return "/id" + id + " - " + name + "\n";
     }
 }

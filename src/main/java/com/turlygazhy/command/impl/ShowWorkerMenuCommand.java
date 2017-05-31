@@ -73,7 +73,7 @@ public class ShowWorkerMenuCommand extends Command {
 
             case PHONE_NUMBER:
                 Contact contact = updateMessage.getContact();
-                if (contact.getUserID() == null) {
+                if (contact == null) {
                     sendMessage(103, chatId, bot);      // Данный пользоваетль не зарегистрирован в Telegram
                 } else {
                     if (userDao.addUser(contact))
