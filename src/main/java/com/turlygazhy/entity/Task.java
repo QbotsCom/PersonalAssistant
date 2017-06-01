@@ -40,15 +40,15 @@ public class Task {
             return id;
         }
 
-        private static Status getStatus(int id){
+        private static Status getStatus(int id) {
             return Status.values()[id];
         }
 
-        public String getStatusString(int id){
+        public String getStatusString(int id) {
             return getStatusString(Status.getStatus(id));
         }
 
-        public String getStatusString(Status status){
+        public String getStatusString(Status status) {
             try {
                 MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
                 switch (status) {
@@ -61,8 +61,7 @@ public class Task {
                     case DONE:
                         return messageDao.getMessageText(85);   // Выполнено
                 }
-            }
-            catch (SQLException ex){
+            } catch (SQLException ex) {
 
             }
             return null;
@@ -189,29 +188,26 @@ public class Task {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
-        List<User> users;
 
         try {
-            users = DaoFactory.getFactory().getUserDao().getUsers();
-            for (User user : users) {
-                if (Objects.equals(user.getChatId(), this.getUserId())) {
-                    if (!this.isHasAudio()) {
-                        sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>\n").append(this.getText()).append("\n\n");
-                    }
-                    sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
-                            .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
-                            .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString()).append("\n\n");           // Статус
-                    if (status.equals(Status.DONE)){
-                        sb.append("<b>").append(messageDao.getMessageText(106)).append("</b>\n").append(report).append("\n\n");               // Отчет
-                        sb.append("<b>").append(messageDao.getMessageText(108)).append("</b>\n").append(dateOfCompletion).append("\n");     // Закончен
-                    }
-                    return sb.toString();
+            User user = DaoFactory.getFactory().getUserDao().getUserByChatId(this.userId);
+            if (Objects.equals(user.getChatId(), this.getUserId())) {
+                if (!this.isHasAudio()) {
+                    sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>\n").append(this.getText()).append("\n\n");
                 }
+                sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
+                        .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
+                        .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString()).append("\n\n");           // Статус
+                if (status.equals(Status.DONE)) {
+                    sb.append("<b>").append(messageDao.getMessageText(106)).append("</b>\n").append(report).append("\n\n");               // Отчет
+                    sb.append("<b>").append(messageDao.getMessageText(108)).append("</b>\n").append(dateOfCompletion).append("\n");     // Закончен
+                }
+                return sb.toString();
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

@@ -7,6 +7,7 @@ public class User {
     int id;
     private Long chatId;
     private String name;
+    private Long addydBy;
 
     public Long getAddydBy() {
         return addydBy;
@@ -15,8 +16,6 @@ public class User {
     public void setAddydBy(Long addydBy) {
         this.addydBy = addydBy;
     }
-
-    private Long addydBy;
 
     public int getId() {
         return id;

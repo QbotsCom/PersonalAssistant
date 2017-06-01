@@ -5,6 +5,10 @@ import com.turlygazhy.command.Command;
 import com.turlygazhy.entity.Task;
 import com.turlygazhy.entity.User;
 import com.turlygazhy.entity.WaitingType;
+import org.telegram.telegrambots.api.methods.ParseMode;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendVideo;
+import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -29,78 +33,104 @@ public class AddNewTaskCommand extends Command {
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         initMessage(update, bot);
         if (waitingType == null) {
-            waitingType = WaitingType.TASK_WORKER;
-            sendMessage(78, chatId, bot); // Выберите работника
-            users = userDao.getUsers();
-
-            StringBuilder sb = new StringBuilder();
-            for (User user : users) {
-                sb.append("/id")
-                        .append(user.getChatId())
-                        .append(" - ")
-                        .append(user.getName())
-                        .append("\n");
-            }
-
-            sendMessage(sb.toString(), chatId, bot);
-            task = new Task(chatId);
-            return false;
+            return addNewTask(bot);
         }
 
         switch (waitingType) {
             case TASK_WORKER:
-                users = userDao.getUsers();
-                Long taskWorker = Long.valueOf(updateMessageText.substring(3));
-                task.setUserId(taskWorker);
-                waitingType = WaitingType.TASK_TEXT;
-                sendMessage(76, chatId, bot); // Опишите задание
-                return false;
+                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                    sendMessage(5, chatId, bot);
+                    return true;
+                }
+                return chooseTaskWorker(bot);
 
             case TASK_TEXT:
-                if (updateMessage.getVoice() == null) {
-                    task.setText(updateMessageText);
-                    task.setHasAudio(false);
-                } else {
-                    task.setHasAudio(true);
-                    task.setVoiceMessageId(updateMessage.getVoice().getFileId());
+                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                    waitingType = WaitingType.TASK_WORKER;
+                    return addNewTask(bot);
                 }
-                sendMessage(77, getDeadlineKeyboard(shownDates)); // Введите дедлайн
-                waitingType = WaitingType.TASK_DEADLINE;
-                return false;
+                return setTaskText(bot);
 
             case TASK_DEADLINE:
-                if (updateMessageText.equals(nextText)) {
-                    shownDates++;
-                    bot.editMessageText(new EditMessageText()
-                            .setMessageId(updateMessage.getMessageId())
-                            .setChatId(chatId)
-                            .setText(messageDao.getMessageText(77)) // Введите дедлайн
-                            .setReplyMarkup(getDeadlineKeyboard(shownDates))
-                    );
-                    return false;
+                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                    updateMessageText = "";
+                    waitingType = WaitingType.TASK_TEXT;
+                    return chooseTaskWorker(bot);
                 }
-
-                if (updateMessageText.equals(prevText)) {
-                    shownDates--;
-                    bot.editMessageText(new EditMessageText()
-                            .setMessageId(updateMessage.getMessageId())
-                            .setChatId(chatId)
-                            .setText(messageDao.getMessageText(77)) // Введите дедлайн
-                            .setReplyMarkup(getDeadlineKeyboard(shownDates))
-                    );
-                    return false;
-                }
-
-                task.setDeadline(updateMessageText);
-
-                waitingType = WaitingType.COMMAND;
-                taskDao.insertTask(task);
-                informExecutor(bot, task.getUserId());
-                sendMessage(79, chatId, bot); //Задание записано
-                return true;
+                return setTaskDeadline(bot);
 
         }
         return false;
+    }
+
+    private boolean addNewTask(Bot bot) throws SQLException, TelegramApiException {
+        waitingType = WaitingType.TASK_WORKER;
+        sendMessage(78, chatId, bot); // Выберите работника
+        users = userDao.getUsers(chatId);
+
+        StringBuilder sb = new StringBuilder();
+        for (User user : users) {
+            sb.append(user.toString());
+        }
+
+        sendMessage(sb.toString(), chatId, bot);
+        task = new Task(chatId);
+        return false;
+    }
+
+    private boolean chooseTaskWorker(Bot bot) throws SQLException, TelegramApiException {
+        users = userDao.getUsers(chatId);
+        if (task.getUserId() == null) {
+            Long taskWorker = userDao.getChatIdByUserId(Long.valueOf(updateMessageText.substring(3)));
+            task.setUserId(taskWorker);
+        }
+        waitingType = WaitingType.TASK_TEXT;
+        sendMessage(76, chatId, bot); // Опишите задание
+        return false;
+    }
+
+    private boolean setTaskText(Bot bot) throws SQLException, TelegramApiException {
+        if (updateMessage.getVoice() == null) {
+            task.setText(updateMessageText);
+            task.setHasAudio(false);
+        } else {
+            task.setHasAudio(true);
+            task.setVoiceMessageId(updateMessage.getVoice().getFileId());
+        }
+        sendMessage(77, getDeadlineKeyboard(shownDates)); // Введите дедлайн
+        waitingType = WaitingType.TASK_DEADLINE;
+        return false;
+    }
+
+    private boolean setTaskDeadline(Bot bot) throws SQLException, TelegramApiException {
+        if (updateMessageText.equals(nextText)) {
+            shownDates++;
+            bot.editMessageText(new EditMessageText()
+                    .setMessageId(updateMessage.getMessageId())
+                    .setChatId(chatId)
+                    .setText(messageDao.getMessageText(77)) // Введите дедлайн
+                    .setReplyMarkup(getDeadlineKeyboard(shownDates))
+            );
+            return false;
+        }
+
+        if (updateMessageText.equals(prevText)) {
+            shownDates--;
+            bot.editMessageText(new EditMessageText()
+                    .setMessageId(updateMessage.getMessageId())
+                    .setChatId(chatId)
+                    .setText(messageDao.getMessageText(77)) // Введите дедлайн
+                    .setReplyMarkup(getDeadlineKeyboard(shownDates))
+            );
+            return false;
+        }
+
+        task.setDeadline(updateMessageText);
+        waitingType = null;
+        taskDao.insertTask(task);
+        informExecutor(bot);
+        sendMessage(79, chatId, bot); // Задание записано
+        return true;
     }
 
     private InlineKeyboardMarkup getDeadlineKeyboard(int shownDates) {
@@ -151,7 +181,20 @@ public class AddNewTaskCommand extends Command {
         return keyboard;
     }
 
-    private void informExecutor(Bot bot, Long chatId) throws SQLException, TelegramApiException { //передача задания
-        sendMessage(80, chatId, bot);
+    private void informExecutor(Bot bot) throws SQLException, TelegramApiException { //передача задания
+        StringBuilder sb = new StringBuilder();
+        sendMessage(80, task.getUserId(),bot);
+        if (task.isHasAudio()) {
+            bot.sendVoice(new SendVoice()
+                    .setVoice(task.getVoiceMessageId())
+                    .setChatId(task.getUserId()));
+        } else {
+            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>").append(task.getText()).append("\n");
+        }
+        sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline());
+        bot.sendMessage(new SendMessage()
+                .setChatId(task.getUserId())
+                .setText(sb.toString())
+                .setParseMode(ParseMode.HTML));
     }
 }

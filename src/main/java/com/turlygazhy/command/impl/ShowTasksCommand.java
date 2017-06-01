@@ -9,7 +9,6 @@ import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
@@ -25,6 +24,7 @@ public class ShowTasksCommand extends Command {
     private List<Task> tasks;
     private Task task;
     private int taskIndex = 0;
+    private int taskType;
 
     public ShowTasksCommand() throws SQLException {
     }
@@ -34,48 +34,25 @@ public class ShowTasksCommand extends Command {
         initMessage(update, bot);
 
         if (waitingType == null) {
-            sendMessage(113, chatId, bot);
-            waitingType = WaitingType.TASK_CHOOSE_STATUS;
+            sendMessage(114, chatId, bot);
+            waitingType = WaitingType.CHOOSE_TASK_TYPE;
             return false;
         }
 
         switch (waitingType) {
-            case TASK_CHOOSE_STATUS:
-                Task.Status status = null;
-                if (updateMessageText.equals(buttonDao.getButtonText(60))) {         // Выполненные
-                    status = Task.Status.DONE;
-                } else if (updateMessageText.equals(buttonDao.getButtonText(61))) {  // Не выполненные
-                    status = Task.Status.DOING;
-                }
+            case CHOOSE_TASK_TYPE:
+                return chooseTaskType(bot);
 
-                if (userDao.isAdmin(chatId)) {
-                    if (status == null) {
-                        tasks = taskDao.getTasks();         // Все задания для админа
-                    } else {
-                        tasks = taskDao.getTasks(status);
-                    }
-                } else {
-                    if (status == null) {
-                        tasks = taskDao.getTasks(chatId);         // Задания для работника
-                    } else {
-                        tasks = taskDao.getTasks(chatId, status);
-                    }
-                }
-                if (!hasTasks()) {
-                    sendMessageWithMainMenu(bot);
-                    return true;
-                }
-                task = tasks.get(taskIndex);
-//                sendMessage(81, chatId, bot); // Ваши задания
-                StringBuilder sb = new StringBuilder();
-                for (Task task : tasks) {
-                    sb.append("/id").append(task.getId()).append(" - ").append(task.getText()).append("\n");
-                }
-                sendMessage(sb.toString(), chatId, bot);
-                waitingType = WaitingType.TASK;
-                return false;
+            case CHOOSE_TASK_STATUS:
+                return chooseTaskStatus(bot);
+
 
             case TASK:
+                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                    sendMessage(113, chatId, bot);
+                    waitingType = WaitingType.CHOOSE_TASK_STATUS;
+                    return false;
+                }
                 int taskId = Integer.valueOf(updateMessageText.substring(3));
                 for (Task task : tasks) {
                     if (task.getId() == taskId) {
@@ -129,7 +106,7 @@ public class ShowTasksCommand extends Command {
 
             // Waiting for choose worker
             case TASK_WORKER:
-                List<User> users = userDao.getUsers();
+                List<User> users = userDao.getUsers(chatId);
                 String taskWorker = updateMessageText.substring(3);
                 for (User user : users) {
                     if (user.getName().equals(taskWorker)) {
@@ -193,6 +170,63 @@ public class ShowTasksCommand extends Command {
         return false;
     }
 
+    private boolean chooseTaskStatus(Bot bot) throws SQLException, TelegramApiException {
+        Task.Status status = null;
+        if (updateMessageText.equals(buttonDao.getButtonText(60))) {         // Выполненные
+            status = Task.Status.DONE;
+        } else if (updateMessageText.equals(buttonDao.getButtonText(61))) {  // Не выполненные
+            status = Task.Status.DOING;
+        } else if (updateMessageText.equals(buttonDao.getButtonText(10))) {  // Назад
+            waitingType = WaitingType.CHOOSE_TASK_TYPE;
+            sendMessage(114, chatId, bot);          // Выберите
+            return false;
+        }
+
+        if (taskType == 0) {
+            if (status == null) {
+                tasks = taskDao.getTasks(chatId);           // Все задания для пользователя
+            } else {
+                tasks = taskDao.getTasks(chatId, status);   // Задания для пользователя с определенным статусом
+            }
+        } else if (taskType == 1) {
+            if (status == null) {
+                tasks = taskDao.getTasksAddedBy(chatId);           // Задания для подченных пользователя
+            } else {
+                tasks = taskDao.getTasksAddedBy(chatId, status);   // Задания для подчиненных пользователя с определенным статусом
+            }
+        }
+        if (!hasTasks()) {
+            sendMessage(82, chatId, bot);       // Задании нет
+            return false;
+        }
+        task = tasks.get(taskIndex);
+//                sendMessage(81, chatId, bot); // Ваши задания
+        StringBuilder sb = new StringBuilder();
+        for (Task task : tasks) {
+            sb.append("/id").append(task.getId()).append(" - ").append(task.getText()).append("\n");
+        }
+        bot.sendMessage(new SendMessage()
+        .setReplyMarkup(keyboardMarkUpDao.select(2))
+        .setText(sb.toString())
+        .setChatId(chatId));
+        waitingType = WaitingType.TASK;
+        return false;
+    }
+
+    private boolean chooseTaskType(Bot bot) throws SQLException, TelegramApiException {
+        if (updateMessageText.equals(buttonDao.getButtonText(63))) {         // Задания для меня
+            taskType = 0;                   //
+        } else if (updateMessageText.equals(buttonDao.getButtonText(64))) {  // Задания для работников
+            taskType = 1;                   //
+        } else if (updateMessageText.equals(buttonDao.getButtonText(10))) { // Назад
+            sendMessage(5, chatId, bot);                // Главное меню
+            return true;
+        }
+        sendMessage(113, chatId, bot);
+        waitingType = WaitingType.CHOOSE_TASK_STATUS;
+        return false;
+    }
+
     private void sendMessageWithMainMenu(Bot bot) throws SQLException, TelegramApiException {
         sendMessage(82, chatId, bot); // Задании нет, меню админа
     }
@@ -228,7 +262,7 @@ public class ShowTasksCommand extends Command {
     }
 
     private void sendToAnotherWorker(Bot bot) throws SQLException, TelegramApiException {
-        List<User> users = userDao.getUsers();
+        List<User> users = userDao.getUsers(chatId);
         StringBuilder sb = new StringBuilder();
         for (User user : users) {
             sb.append("/id");

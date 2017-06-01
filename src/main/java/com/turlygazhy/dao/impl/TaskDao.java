@@ -43,10 +43,6 @@ public class TaskDao extends AbstractDao {
         }
         ps.execute();
     }
-    
-    public List<Task> getTasks() throws SQLException {
-        return getTasks(null, null);
-    }
 
     public List<Task> getTasks(Long userId) throws SQLException {
         return getTasks(userId, null);
@@ -54,52 +50,72 @@ public class TaskDao extends AbstractDao {
 
     public List<Task> getTasks(Long userId, Task.Status status) throws SQLException {
         PreparedStatement ps;
-        if (userId == null) {
-            if (status == null) {
-                ps = connection.prepareStatement(SELECT_TASK);
-            } else if (status == Task.Status.DONE){
-                ps = connection.prepareStatement(SELECT_TASK_BY_STATUS);
-                ps.setInt(1, status.getId());
-            } else {
-                ps = connection.prepareStatement(SELECT_TASK_BY_STATUS_NOT_EQUAL);
-                ps.setInt(1, Task.Status.DONE.getId());
-            }
+        if (status == null) {
+            ps = connection.prepareStatement("SELECT * FROM TASK WHERE USER_ID = ?");
         } else {
-            if (status == null) {
-                ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID);
-            } else if(status == Task.Status.DONE){
-                ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID_AND_STATUS);
-                ps.setInt(2, status.getId());
+            if (status.equals(Task.Status.DONE)) {
+                ps = connection.prepareStatement("SELECT * FROM TASK WHERE STATUS = 1 AND USER_ID = ?");
             } else {
-                ps = connection.prepareStatement(SELECT_TASK_BY_USER_ID_AND_STATUS_NOT_EQUAL);
-                ps.setInt(2, Task.Status.DONE.getId());
+                ps = connection.prepareStatement("SELECT * FROM TASK WHERE STATUS != 1 AND USER_ID = ?");
             }
-            ps.setLong(1, userId);
         }
-        
+        ps.setLong(1, userId);
+
         ps.execute();
 
         ResultSet rs = ps.getResultSet();
-
         ArrayList<Task> tasks = new ArrayList<>();
         while (rs.next()) {
-            Task task = new Task(rs.getInt(1));             // Task ID
-            task.setUserId(rs.getLong(2));                  // Task Executor
-            task.setAddedByUserId(rs.getLong(3));           // Added User ID
-            task.setDeadline(rs.getString(4));              // Deadline
-            task.setStatus(rs.getInt(5));                   // Status
-            task.setHasAudio(rs.getBoolean(6));             // HasAudio
-            if (task.isHasAudio()) {
-                task.setVoiceMessageId(rs.getString(7));    // Task Voice
+            tasks.add(parseTask(rs));
+        }
+        return tasks;
+    }
+
+    public List<Task> getTasksAddedBy() throws SQLException {
+        return getTasksAddedBy(null, null);
+    }
+
+    public List<Task> getTasksAddedBy(Long addedBy) throws SQLException {
+        return getTasksAddedBy(addedBy, null);
+    }
+
+    public List<Task> getTasksAddedBy(Long addedBy, Task.Status status) throws SQLException {
+        List<Task> tasks = new ArrayList<>();
+        PreparedStatement ps;
+        if (status == null) {
+            ps = connection.prepareStatement("SELECT * FROM TASK WHERE ADDED_BY_USER_ID = ?");
+        } else {
+            if (status.equals(Task.Status.DONE)) {
+                ps = connection.prepareStatement("SELECT * FROM TASK WHERE STATUS = 1 AND ADDED_BY_USER_ID = ?");
             } else {
-                task.setText(rs.getString(8));              // Task Text
+                ps = connection.prepareStatement("SELECT * FROM TASK WHERE STATUS != 1 AND ADDED_BY_USER_ID = ?");
             }
-            task.setReport(rs.getString(9));                // Report
-            task.setDateOfCompletion(rs.getString(10));     // Date of completion
-            tasks.add(task);
+        }
+        ps.setLong(1, addedBy);
+        ps.execute();
+        ResultSet rs = ps.getResultSet();
+        while (rs.next()) {
+            tasks.add(parseTask(rs));
         }
 
         return tasks;
+    }
+
+    private Task parseTask(ResultSet rs) throws SQLException {
+        Task task = new Task(rs.getInt(1));             // Task ID
+        task.setUserId(rs.getLong(2));                  // Task Executor
+        task.setAddedByUserId(rs.getLong(3));           // Added User ID
+        task.setDeadline(rs.getString(4));              // Deadline
+        task.setStatus(rs.getInt(5));                   // Status
+        task.setHasAudio(rs.getBoolean(6));             // HasAudio
+        if (task.isHasAudio()) {
+            task.setVoiceMessageId(rs.getString(7));    // Task Voice
+        } else {
+            task.setText(rs.getString(8));              // Task Text
+        }
+        task.setReport(rs.getString(9));                // Report
+        task.setDateOfCompletion(rs.getString(10));     // Date of completion
+        return task;
     }
 
     public void updateTask(Task task) throws SQLException {
@@ -112,7 +128,5 @@ public class TaskDao extends AbstractDao {
         ps.execute();
     }
 
-    public List<Task> getTasks(Task.Status status) throws SQLException {
-        return getTasks(null, status);
-    }
+
 }

@@ -29,20 +29,37 @@ public class ShowStatisticCommand extends Command {
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         initMessage(update, bot);
         if (waitingType == null) {
-            waitingType = WaitingType.CHOOSE_USER;
-            users = userDao.getUsers();
+            users = userDao.getUsers(chatId);
+            if (users.size() == 0) {
+                sendMessage(10, chatId, bot);   // У вас нет сотрудников
+                return true;
+            }
             sendMessage(104, chatId, bot);      // Выберите сотрудника
             showUsers(chatId, bot);
+            waitingType = WaitingType.CHOOSE_USER;
             return false;
         }
 
         switch (waitingType) {
             case CHOOSE_USER:
-                workerId = Long.valueOf(updateMessageText.substring(3));
+                if (updateMessageText.equals(buttonDao.getButtonText(10))){
+                    sendMessage(5, chatId, bot);
+                    return true;
+                }
+                workerId = userDao.getChatIdByUserId(
+                        Long.valueOf(updateMessageText.substring(3))
+                );
                 showUserStatistic(chatId, workerId, bot);
                 waitingType = WaitingType.CHOOSE_STATUS;
                 return false;
+
             case CHOOSE_STATUS:
+                if (updateMessageText.equals(buttonDao.getButtonText(10))){
+                    sendMessage(104, chatId, bot);      // Выберите сотрудника
+                    showUsers(chatId, bot);
+                    waitingType = WaitingType.CHOOSE_USER;
+                    return false;
+                }
                 Task.Status status = Task.Status.values()[Integer.parseInt(updateMessageText.substring(3))];    // Выбираем статус
                 showUserStatisticByStatus(status, workerId, bot);
                 return false;
@@ -72,7 +89,6 @@ public class ShowStatisticCommand extends Command {
     }
 
 
-
     private void showUserStatistic(Long chatId, Long workerId, Bot bot) throws SQLException, TelegramApiException {
         List<Task> tasks = taskDao.getTasks(workerId);
         StringBuilder sb = new StringBuilder();
@@ -83,17 +99,17 @@ public class ShowStatisticCommand extends Command {
             int countDoneTask = 0;
             for (Task task : tasks) {
                 if (task.getStatus().equals(status)) {
-                    if (status.equals(Task.Status.DONE)){
+                    if (status.equals(Task.Status.DONE)) {
                         String deadlineStr = task.getDeadline();
                         String dateOfCompletionStr = task.getDateOfCompletion();
 
                         int deadline = Integer.valueOf(deadlineStr.substring(0, 2))
-                                + Integer.valueOf(deadlineStr.substring(3))*1000;
+                                + Integer.valueOf(deadlineStr.substring(3)) * 1000;
 
                         int dateOfCompletion = Integer.valueOf(dateOfCompletionStr.substring(0, 2))
-                                + Integer.valueOf(dateOfCompletionStr.substring(3))*1000;
+                                + Integer.valueOf(dateOfCompletionStr.substring(3)) * 1000;
                         System.out.print(deadline + " " + dateOfCompletion);
-                        if (deadline > dateOfCompletion){
+                        if (deadline > dateOfCompletion) {
                             countDoneTask++;
                         }
                     }
@@ -101,7 +117,7 @@ public class ShowStatisticCommand extends Command {
                 }
             }
             sb.append(count).append("\n");
-            if (status.equals(Task.Status.DONE)){
+            if (status.equals(Task.Status.DONE)) {
                 sb.append("<b>").append(messageDao.getMessageText(112)).append("</b>").append(countDoneTask).append("\n");
             }
         }
