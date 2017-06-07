@@ -40,7 +40,7 @@ public class ShowWorkerMenuCommand extends Command {
                 if (updateMessageText.equals(buttonDao.getButtonText(58))) {      // Список сотрудников
                     List<User> users = userDao.getUsers(chatId);
                     StringBuilder sb = new StringBuilder();
-                    if (users.size() == 0){
+                    if (users.size() == 0) {
                         sendMessage(10, chatId, bot);
                         return false;
                     }
@@ -57,11 +57,11 @@ public class ShowWorkerMenuCommand extends Command {
                 if (updateMessageText.equals(buttonDao.getButtonText(59))) {      // Удалить сотрудника
                     StringBuilder sb = new StringBuilder();
                     List<User> users = userDao.getUsers(chatId);
-                    if (users.size() == 0){
+                    if (users.size() == 0) {
                         sendMessage(10, chatId, bot);
                         return false;
                     }
-                    for (User user : users){
+                    for (User user : users) {
                         sb.append(user.toString());
                     }
                     sendMessage(104, chatId, bot);      // Выберите пользователя
@@ -77,17 +77,18 @@ public class ShowWorkerMenuCommand extends Command {
                 return false;
 
             case PHONE_NUMBER:
-                if (updateMessageText.equals(buttonDao.getButtonText(10))){
-                    sendMessage(100, chatId, bot);
-                    waitingType = WaitingType.COMMAND;
-                    return false;
+                if (updateMessageText != null) {
+                    if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                        sendMessage(100, chatId, bot);
+                        waitingType = WaitingType.COMMAND;
+                        return false;
+                    }
                 }
                 Contact contact = updateMessage.getContact();
                 if (contact == null) {
                     sendMessage(103, chatId, bot);      // Данный пользоваетль не зарегистрирован в Telegram
                 } else {
-                    if (userDao.addUser(contact, chatId))
-                    {
+                    if (userDao.addUser(contact, chatId)) {
                         sendMessage(5, contact.getUserID(), bot);   // Главное меню для работника
                         sendMessage(102, chatId, bot);      // Сотрудник добавлен
                         waitingType = WaitingType.COMMAND;
@@ -98,7 +99,7 @@ public class ShowWorkerMenuCommand extends Command {
                 waitingType = WaitingType.COMMAND;
                 return false;
             case CHOOSE_USER:
-                if (updateMessageText.equals(buttonDao.getButtonText(10))){
+                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
                     sendMessage(100, chatId, bot);
                     waitingType = WaitingType.COMMAND;
                     return false;

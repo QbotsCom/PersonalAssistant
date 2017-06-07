@@ -22,6 +22,10 @@ public class CommandFactory {
                 return new ShowWorkerMenuCommand();
             case SHOW_STATISTIC:
                 return new ShowStatisticCommand();
+            case ACCEPT_OR_REJECT_TASK:
+                return new AcceptOrRejectTaskCommand();
+            case ADMIN_ACCEPT_OR_REJECT_TASK:
+                return new AdminAcceptOrRejectTaskCommand();
             default:
                 throw new NotRealizedMethodException("Not realized for type: " + type);
         }

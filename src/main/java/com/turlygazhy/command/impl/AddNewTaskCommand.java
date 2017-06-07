@@ -12,6 +12,8 @@ import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -45,9 +47,11 @@ public class AddNewTaskCommand extends Command {
                 return chooseTaskWorker(bot);
 
             case TASK_TEXT:
-                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
-                    waitingType = WaitingType.TASK_WORKER;
-                    return addNewTask(bot);
+                if (updateMessageText != null) {
+                    if (updateMessageText.equals(buttonDao.getButtonText(10))) {
+                        waitingType = WaitingType.TASK_WORKER;
+                        return addNewTask(bot);
+                    }
                 }
                 return setTaskText(bot);
 
@@ -195,6 +199,24 @@ public class AddNewTaskCommand extends Command {
         bot.sendMessage(new SendMessage()
                 .setChatId(task.getUserId())
                 .setText(sb.toString())
+                .setReplyMarkup(getTaskKeyboard())
                 .setParseMode(ParseMode.HTML));
+    }
+
+    private InlineKeyboardMarkup getTaskKeyboard() throws SQLException {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(65))   // Accept
+                .setCallbackData(buttonDao.getButtonText(65) + " " + task.getId()));
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(66))   // Reject
+                .setCallbackData(buttonDao.getButtonText(66) + " " + task.getId()));
+
+        rows.add(row);
+        keyboard.setKeyboard(rows);
+
+        return keyboard;
     }
 }

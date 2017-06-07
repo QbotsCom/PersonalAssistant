@@ -9,9 +9,13 @@ import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -132,8 +136,32 @@ public class ShowTasksCommand extends Command {
                     }
                 }
                 return false;
+
+            case CAUSE:
+                task.setStatus(Task.Status.REJECTED);
+                task.setCause(updateMessageText);
+                bot.sendMessage(new SendMessage()
+                        .setText(task.toString())
+                        .setChatId(task.getAddedByUserId())
+                        .setParseMode(ParseMode.HTML));
+                sendMessage("OK", chatId, bot);
+                taskDao.updateTask(task);
+                if (taskIndex != 0) {
+                    taskIndex--;
+                }
+
+                try {
+                    task = tasks.get(taskIndex);
+                } catch (IndexOutOfBoundsException ex) {
+                    sendMessage(82, chatId, bot); // Задании нет
+                    return true;
+                }
+                sendTask(task, bot);
+                waitingType = WaitingType.COMMAND;
+                return false;
+
             case TASK_REPORT:
-                task.setStatus(Task.Status.DONE);
+                task.setStatus(Task.Status.WAITING_ADMIN_CONFIRMATION);
                 task.setReport(updateMessageText);
                 Date date = new Date();
                 int dateToString = date.getDate();
@@ -273,23 +301,8 @@ public class ShowTasksCommand extends Command {
     }
 
     private void rejectTask(Bot bot) throws SQLException, TelegramApiException {
-        task.setStatus(Task.Status.REJECTED);
-        taskDao.updateTask(task);
-        tasks.remove(taskIndex);
-        informAdmin(bot, 83); // Задание отклонено
-
-        if (taskIndex != 0) {
-            taskIndex--;
-        }
-
-        try {
-            task = tasks.get(taskIndex);
-        } catch (IndexOutOfBoundsException ex) {
-            sendMessage(82, chatId, bot); // Задании нет
-            return;
-        }
-
-        sendTask(task, bot);
+        sendMessage("Why?", chatId, bot);
+        waitingType = WaitingType.CAUSE;
     }
 
     private void acceptTask(Bot bot) throws SQLException, TelegramApiException {
@@ -318,10 +331,30 @@ public class ShowTasksCommand extends Command {
                     .setChatId(task.getAddedByUserId())
                     .setVoice(task.getVoiceMessageId()));
         }
-        bot.sendMessage(new SendMessage()
-                .setParseMode(ParseMode.HTML)
-                .setChatId(task.getAddedByUserId())
-                .setText(task.toString()));
+        if (task.getStatus() == Task.Status.WAITING_ADMIN_CONFIRMATION) {
+            bot.sendMessage(new SendMessage()
+                    .setParseMode(ParseMode.HTML)
+                    .setChatId(task.getAddedByUserId())
+                    .setText(task.toString())
+            .setReplyMarkup(getKeyboard()));
+        }
+    }
+
+    private ReplyKeyboard getKeyboard() throws SQLException {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(65))   // Accept
+                .setCallbackData(buttonDao.getButtonText(67) + " " + task.getId()));
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(66))   // Reject
+                .setCallbackData(buttonDao.getButtonText(68) + " " + task.getId()));
+
+        rows.add(row);
+        keyboard.setKeyboard(rows);
+
+        return keyboard;
     }
 
     private void sendTask(Task task, Bot bot) throws SQLException, TelegramApiException {

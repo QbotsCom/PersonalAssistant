@@ -2,6 +2,7 @@ package com.turlygazhy.dao.impl;
 
 import com.turlygazhy.dao.AbstractDao;
 import com.turlygazhy.entity.Task;
+import org.glassfish.hk2.utilities.reflection.Pretty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,22 +15,16 @@ import java.util.List;
  * Created by lol on 25.05.2017.
  */
 public class TaskDao extends AbstractDao {
-    private static final String SELECT_TASK = "SELECT * FROM TASK";
+    //    private static final String SELECT_TASK = "SELECT * FROM TASK";
     private final Connection connection;
-    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null)"; //
-    private final String SELECT_TASK_BY_USER_ID_AND_STATUS = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS = ?"; //
-    private final String SELECT_TASK_BY_USER_ID_AND_STATUS_NOT_EQUAL = "SELECT * FROM TASK WHERE USER_ID = ? AND STATUS != ?"; //
-    private final String SELECT_TASK_BY_STATUS = "SELECT * FROM TASK WHERE STATUS = ?"; //
-    private final String SELECT_TASK_BY_STATUS_NOT_EQUAL = "SELECT * FROM TASK WHERE STATUS != ?"; //
-    private final String SELECT_TASK_BY_USER_ID = "SELECT * FROM TASK WHERE USER_ID = ?"; //
-    private final String UPDATE_TASK = "UPDATE TASK SET STATUS = ?, USER_ID = ?, REPORT = ?, DATE_OF_COMPLETION = ? WHERE ID = ?"; //
+    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null, null)"; //
 
     public TaskDao(Connection connection) {
         this.connection = connection;
     }
 
-    public void insertTask(Task task) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement(INSERT_INTO_TASK);
+    public Task insertTask(Task task) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(INSERT_INTO_TASK, PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setLong(1, task.getUserId());
         ps.setLong(2, task.getAddedByUserId());
         ps.setString(3, task.getDeadline());
@@ -41,7 +36,12 @@ public class TaskDao extends AbstractDao {
             ps.setString(5, null);
             ps.setString(6, task.getText());
         }
-        ps.execute();
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) {
+            task.setId(rs.getInt(1));
+        }
+        return task;
     }
 
     public List<Task> getTasks(Long userId) throws SQLException {
@@ -114,19 +114,33 @@ public class TaskDao extends AbstractDao {
             task.setText(rs.getString(8));              // Task Text
         }
         task.setReport(rs.getString(9));                // Report
-        task.setDateOfCompletion(rs.getString(10));     // Date of completion
+        task.setCause(rs.getString(10));                // Cause
+        task.setDateOfCompletion(rs.getString(11));     // Date of completion
         return task;
     }
 
     public void updateTask(Task task) throws SQLException {
+        String UPDATE_TASK = "UPDATE TASK SET STATUS = ?, USER_ID = ?, REPORT = ?, CAUSE = ?, DATE_OF_COMPLETION = ? WHERE ID = ?";
         PreparedStatement ps = connection.prepareStatement(UPDATE_TASK);
         ps.setInt(1, task.getStatus().getId());
         ps.setLong(2, task.getUserId());
-        ps.setString(4, task.getDateOfCompletion());
         ps.setString(3, task.getReport());
-        ps.setInt(5, task.getId());
+        ps.setString(4, task.getCause());
+        ps.setString(5, task.getDateOfCompletion());
+        ps.setInt(6, task.getId());
         ps.execute();
     }
 
 
+    public Task getTask(int id) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM TASK WHERE ID = ?");
+        ps.setInt(1, id);
+        ps.execute();
+
+        ResultSet rs = ps.getResultSet();
+        if (rs.next()) {
+            return parseTask(rs);
+        }
+        return null;
+    }
 }

@@ -26,25 +26,28 @@ public class Conversation {
     public void handleUpdate(Update update, Bot bot) throws SQLException, TelegramApiException {
         org.telegram.telegrambots.api.objects.Message updateMessage = update.getMessage();
         String inputtedText;
-        if (updateMessage == null) {
-            inputtedText = update.getCallbackQuery().getData();
-            updateMessage = update.getCallbackQuery().getMessage();
-        } else {
-            inputtedText = updateMessage.getText();
-        }
-
-        try {
-            command = commandService.getCommand(inputtedText);
-        } catch (CommandNotFoundException e) {
-            if (updateMessage.isGroupMessage()) {
-                return;
+        if (command == null) {
+            if (updateMessage == null) {
+                inputtedText = update.getCallbackQuery().getData();
+                inputtedText = inputtedText.substring(0, inputtedText.indexOf(" "));
+                updateMessage = update.getCallbackQuery().getMessage();
+            } else {
+                inputtedText = updateMessage.getText();
             }
-            if (command == null) {
-                ShowInfoCommand showInfoCommand = new ShowInfoCommand();
-                int cannotHandleUpdateMessageId = 7;
-                showInfoCommand.setMessageId(cannotHandleUpdateMessageId);
-                showInfoCommand.execute(update, bot);
-                return;
+
+            try {
+                command = commandService.getCommand(inputtedText);
+            } catch (CommandNotFoundException e) {
+                if (updateMessage.isGroupMessage()) {
+                    return;
+                }
+                if (command == null) {
+                    ShowInfoCommand showInfoCommand = new ShowInfoCommand();
+                    int cannotHandleUpdateMessageId = 7;
+                    showInfoCommand.setMessageId(cannotHandleUpdateMessageId);
+                    showInfoCommand.execute(update, bot);
+                    return;
+                }
             }
         }
         boolean commandFinished = command.execute(update, bot);

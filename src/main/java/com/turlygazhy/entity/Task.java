@@ -21,14 +21,22 @@ public class Task {
     private String voiceMessageId;
     private String report;
     private String dateOfCompletion;
+    private String cause;
 
     private boolean hasAudio;
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public enum Status {
         DOING(0),
         DONE(1),
         WAITING_FOR_CONFIRMATION(2),
-        REJECTED(3);
+        REJECTED(3),
+        WAITING_ADMIN_CONFIRMATION(4),
+        REJECTED_BY_ADMIN(5);
+        ;
 
         private int id;
 
@@ -54,15 +62,19 @@ public class Task {
                 switch (status) {
                     case WAITING_FOR_CONFIRMATION:
                         return messageDao.getMessageText(87);   // Ожидание подтверждения
+                    case WAITING_ADMIN_CONFIRMATION:
+                        return messageDao.getMessageText(116);  // Ожидание подтверждения начальника
                     case DOING:
-                        return messageDao.getMessageText(110);   // Выполняется
+                        return messageDao.getMessageText(110);  // Выполняется
                     case REJECTED:
                         return messageDao.getMessageText(86);   // Отклонено
+                    case REJECTED_BY_ADMIN:
+                        return messageDao.getMessageText(117);  // Отклонено начальником
                     case DONE:
                         return messageDao.getMessageText(85);   // Выполнено
                 }
             } catch (SQLException ex) {
-
+                ex.printStackTrace();
             }
             return null;
         }
@@ -129,8 +141,12 @@ public class Task {
                     return messageDao.getMessageText(93);
                 case WAITING_FOR_CONFIRMATION:
                     return messageDao.getMessageText(94);
+                case WAITING_ADMIN_CONFIRMATION:
+                    return messageDao.getMessageText(116);  // Ожидание подтверждения начальника
                 case REJECTED:
                     return messageDao.getMessageText(95);
+                case REJECTED_BY_ADMIN:
+                    return messageDao.getMessageText(117);  // Отклонено начальником
             }
         } catch (SQLException e1) {
             e1.printStackTrace();
@@ -184,6 +200,14 @@ public class Task {
         this.dateOfCompletion = dateOfCompletion;
     }
 
+    public String getCause() {
+        return cause;
+    }
+
+    public void setCause(String cause) {
+        this.cause = cause;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -198,10 +222,13 @@ public class Task {
                 sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
                         .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
                         .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString()).append("\n\n");           // Статус
-                if (status.equals(Status.DONE)) {
+                if (status.equals(Status.WAITING_ADMIN_CONFIRMATION) || status.equals(Status.DONE)) {
                     sb.append("<b>").append(messageDao.getMessageText(106)).append("</b>\n").append(report).append("\n\n");               // Отчет
                     sb.append("<b>").append(messageDao.getMessageText(108)).append("</b>\n").append(dateOfCompletion).append("\n");     // Закончен
+                } else if (status.equals(Status.REJECTED) || status.equals(Status.REJECTED_BY_ADMIN)) {
+                    sb.append("<b>").append(messageDao.getMessageText(115)).append("</b>\n").append(cause);
                 }
+
                 return sb.toString();
             }
 
