@@ -294,7 +294,7 @@ public class ShowTasksCommand extends Command {
         StringBuilder sb = new StringBuilder();
         for (User user : users) {
             sb.append("/id");
-            sb.append(user.getName()).append("\n");
+            sb.append(user.getId()).append(" - ").append(user.getName()).append("\n");
         }
         sendMessage(sb.toString(), chatId, bot);
         waitingType = WaitingType.TASK_WORKER;

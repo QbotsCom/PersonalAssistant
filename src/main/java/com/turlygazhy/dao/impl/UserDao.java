@@ -95,7 +95,7 @@ public class UserDao {
 
     public List<User> getUsers(Long chatID) throws SQLException {
         List<User> users = new ArrayList<>();
-        PreparedStatement ps = ConnectionPool.getConnection().prepareStatement(SELECT_FROM_USER_ADDED_BY);
+        PreparedStatement ps = connection.prepareStatement(SELECT_FROM_USER_ADDED_BY);
         ps.setLong(1, chatID);
         ps.execute();
         ResultSet rs = ps.getResultSet();
